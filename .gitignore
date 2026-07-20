@@ -1,0 +1,306 @@
+# Sauvegardes et originaux (volumineux, non nécessaires en prod)
+originaux/
+christophe thurnherr site-backup/
+
+# Fichiers Netlify/Carrd (inutile sur GitHub Pages)
+_redirects
+
+# CSS orphelin (non référencé dans le HTML)
+style.css
+
+# Fichiers système OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Configuration locale Claude Code
+.claude/
+
+# Fichiers temporaires
+*.log
+*.tmp
+
+# ═══════════════════════════════════════════════════
+# Fichiers orphelins — non référencés par index.html
+# ═══════════════════════════════════════════════════
+
+# Vidéos MP4 (106 Mo) — non utilisées dans le HTML
+assets/video02.mp4
+assets/video03.mp4
+
+# Posters vidéo orphelins
+assets/video02_poster.webp
+assets/video03_poster.webp
+
+# Fichiers WebP à la racine (anciens exports Carrd)
+06.webp
+assemblage des aiguilles de la moonwatch.webp
+
+# Dossier assets/expos/ entier (ancienne galerie Carrd, non utilisé)
+assets/expos/
+
+# Galeries images entièrement orphelines
+assets/images/gallery01/
+assets/images/gallery03/
+assets/images/gallery04/
+assets/images/gallery05/
+assets/images/gallery06/
+assets/images/gallery07/
+assets/images/gallery08/
+assets/images/gallery09/
+assets/images/gallery10/
+assets/images/gallery11/
+assets/images/gallery12/
+assets/images/gallery14/
+assets/images/gallery15/
+assets/images/gallery16/
+assets/images/gallery17/
+assets/images/gallery18/
+assets/images/gallery19/
+assets/images/gallery20/
+assets/images/gallery21/
+assets/images/gallery22/
+assets/images/gallery23/
+assets/images/gallery24/
+assets/images/gallery25/
+assets/images/gallery26/
+assets/images/gallery27/
+assets/images/gallery28/
+assets/images/gallery29/
+assets/images/gallery30/
+assets/images/gallery31/
+assets/images/gallery32/
+assets/images/gallery34/
+assets/images/gallery35/
+assets/images/gallery37/
+assets/images/gallery39/
+assets/images/gallery47/
+assets/images/gallery48/
+assets/images/gallery49/
+assets/images/gallery53/
+assets/images/gallery54/
+
+# Fichiers orphelins dans les galeries partiellement utilisées
+# gallery55/
+assets/images/gallery55/049d19de.webp
+assets/images/gallery55/05d6716e.webp
+assets/images/gallery55/0d7288ea.webp
+assets/images/gallery55/6aa33d85.webp
+assets/images/gallery55/a23a3ef8.webp
+# gallery56/
+assets/images/gallery56/5c78d330.webp
+assets/images/gallery56/869706e9.webp
+assets/images/gallery56/a544b856.webp
+assets/images/gallery56/b212d237.webp
+assets/images/gallery56/bd56d259.webp
+# gallery57/
+assets/images/gallery57/62602d4f.webp
+assets/images/gallery57/746318f8.webp
+assets/images/gallery57/87ebbea7.webp
+assets/images/gallery57/b4cc48e3.webp
+assets/images/gallery57/cea9fd56.webp
+assets/images/gallery57/f93ff9bc.webp
+# gallery58/
+assets/images/gallery58/88c1dad6.webp
+assets/images/gallery58/8e036bf4.webp
+assets/images/gallery58/aa447481.webp
+assets/images/gallery58/bd6cfff9.webp
+assets/images/gallery58/d8ff2518.webp
+# gallery59/
+assets/images/gallery59/017a8e17.webp
+assets/images/gallery59/19512c81.webp
+assets/images/gallery59/8405e0b3.webp
+assets/images/gallery59/8d17534c.webp
+assets/images/gallery59/d92a99c6.webp
+assets/images/gallery59/f1f1d330.webp
+
+# Thumbnails container (non référencées)
+assets/images/container04.webp
+assets/images/container05.webp
+assets/images/container10.webp
+assets/images/container107.webp
+assets/images/container109.webp
+assets/images/container111.webp
+assets/images/container116.webp
+assets/images/container68.webp
+assets/images/container86.webp
+assets/images/container91.webp
+assets/images/container94.webp
+
+# Slideshow orphelines (slideshow03-18127b91 conservé — utilisé dans Savoir-faire)
+assets/images/slideshow01-29628fa7.webp
+assets/images/slideshow01-c670c032.webp
+assets/images/slideshow02-29628fa7.webp
+assets/images/slideshow02-3e612701.webp
+assets/images/slideshow02-b1b45fb0.webp
+assets/images/slideshow02-e9b79641.webp
+assets/images/slideshow03-2349511a.webp
+assets/images/slideshow03-383a50bc.webp
+assets/images/slideshow03-3b537aae.webp
+assets/images/slideshow03-684f91c2.webp
+assets/images/slideshow03-7ecc088b.webp
+assets/images/slideshow03-82d6e06b.webp
+assets/images/slideshow03-8a609445.webp
+assets/images/slideshow03-930108e1.webp
+assets/images/slideshow03-aa6f1a2c.webp
+assets/images/slideshow03-ae5b24dd.webp
+assets/images/slideshow03-cceae6ae.webp
+assets/images/slideshow03-f627e6c0.webp
+assets/images/slideshow04-29628fa7.webp
+assets/images/slideshow04-a67d3f17.webp
+assets/images/slideshow04-e570c893.webp
+assets/images/slideshow04-edb76587.webp
+assets/images/slideshow05-2ebdb27f.webp
+assets/images/slideshow05-3b8aad3e.webp
+assets/images/slideshow05-61c89d95.webp
+assets/images/slideshow05-71a124c7.webp
+assets/images/slideshow05-8928c2dc.webp
+assets/images/slideshow05-afc0890b.webp
+assets/images/slideshow05-d67cada4.webp
+assets/images/slideshow07-29628fa7.webp
+assets/images/slideshow07-a67d3f17.webp
+assets/images/slideshow07-e570c893.webp
+assets/images/slideshow07-edb76587.webp
+assets/images/slideshow08-29628fa7.webp
+assets/images/slideshow09-29628fa7.webp
+assets/images/slideshow09-3e612701.webp
+assets/images/slideshow09-9b0da3b5.webp
+assets/images/slideshow09-b1b45fb0.webp
+assets/images/slideshow09-e9b79641.webp
+
+# Images numérotées orphelines
+assets/images/image05.webp
+assets/images/image08.webp
+assets/images/image13.webp
+assets/images/image18.webp
+assets/images/image25.webp
+assets/images/image29.jpg
+assets/images/image30.webp
+assets/images/image36.webp
+assets/images/image37.webp
+assets/images/image40.webp
+
+# Fichiers WebP loose dans assets/ (ancienne bibliothèque Carrd)
+assets/010.webp
+assets/04.webp
+assets/114X90cm Photo Book.webp
+assets/12.webp
+assets/20200401_164452.webp
+assets/20200401_165127.webp
+assets/20221202_111549.webp
+assets/20230513_102034.webp
+assets/20230716_223921 (1).webp
+assets/20240402_151815.webp
+assets/20240713_102926.webp
+assets/20240713_164021.webp
+assets/20240722_164514.webp
+assets/20240726_162955.webp
+assets/20240912_171656.webp
+assets/76X43cm Mercedes SLS AMG Black Series..webp
+assets/96x96cm Charles Leclerc Monaco GP 2024.webp
+assets/ASTON MARTIN -01 _1.webp
+assets/Armoiries découpe visage.webp
+assets/Armoiries détail médaillon.webp
+assets/Armoiries ponçage.webp
+assets/Artwork Marquetry, Ferrari F12 Berlinetta.webp
+assets/Ayrton Senna Book.webp
+assets/BUGATTI_1.webp
+assets/Beaune Auto Prestige.webp
+assets/Chat 61x61cm.webp
+assets/Cité de l'automobile - Mulhouse (2).webp
+assets/Cité de l'automobile - Mulhouse (3).webp
+assets/Cité de l'automobile - Mulhouse.webp
+assets/Citée de l'automobile - Mulhouse.webp
+assets/DSCF7458.webp
+assets/DSCF7461.webp
+assets/DSC_0163.webp
+assets/DSC_0169.webp
+assets/DSC_0177.webp
+assets/DSC_0243.webp
+assets/DSC_0268.webp
+assets/DSC_0560.webp
+assets/DSC_0577.webp
+assets/DSC_0591.webp
+assets/DSC_0637.webp
+assets/DSC_0642.webp
+assets/DSC_0650.webp
+assets/DSC_0658.webp
+assets/DSC_0662.webp
+assets/DSC_0754.webp
+assets/DSC_0755.webp
+assets/DSC_0759.webp
+assets/DSC_0772.webp
+assets/DSC_0826.webp
+assets/DSC_0843.webp
+assets/DSC_0868.webp
+assets/DSC_1318.webp
+assets/DSC_1371.webp
+assets/Echiquier 5.webp
+assets/Echiquier Monaco GRAND PRIX 55X55CM.webp
+assets/Echiquier PROST VS SENNA 51X51CM.webp
+assets/Echiquier Palais..webp
+assets/Ecusson complet après l'assemblage N°4.webp
+assets/F1 REDBULL 97X43CM.webp
+assets/F12 Berlinetta  80x80cm.webp
+assets/FERRARI F40 110X48CM.webp
+assets/Fresque sans les bandes.webp
+assets/GP MONACO 110X90CM.webp
+assets/Géronimo Book.webp
+assets/Géronimo focus.webp
+assets/IMG-20230419-WA0001.webp
+assets/IMG_0487.webp
+assets/IMG_0491.webp
+assets/IMG_0492.webp
+assets/LANBORGINI-01_1.webp
+assets/M.BUGATTI.webp
+assets/MA-230221190915-6763.webp
+assets/MA-230221191635-6856.webp
+assets/MA-230221192139-6909.webp
+assets/Marché des sites historiques Grimaldi de Monaco.webp
+assets/Mc Laren MP4 Senna.webp
+assets/Mercedes SLS AMG Black Séries.webp
+assets/Nina Book.webp
+assets/N°20.webp
+assets/PEUGEOT-208-01 _4.webp
+assets/PORSCHE 911-01 _3.webp
+assets/Photo Book.webp
+assets/Photos Book 1.webp
+assets/Photos Book.webp
+assets/Porsche Le Mans 1970 SIZE 51X51CM 1.webp
+assets/Porsche Le Mans 1970 SIZE 51X51CM 6.webp
+assets/Porsche Le Mans 1970 SIZE 51X51CM.webp
+assets/Pur-sang Arabe en HD size 111X87cm.webp
+assets/RED BULL  2012 RB8.webp
+assets/RIVA AQUARAMA114X90CM.webp
+assets/RIVA Aquarama Lamborghini.webp
+assets/Riva Tritone.  Size 114X89CM.webp
+assets/RétroMobile 2019 (2).webp
+assets/RétroMobile 2019 (3).webp
+assets/RétroMobile 2019.webp
+assets/RétroMobile 2023 (1).webp
+assets/RétroMobile 2023 (2).webp
+assets/RétroMobile 2023 (3).webp
+assets/RétroMobile 2023 (4).webp
+assets/RétroMobile 2023 (5).webp
+assets/RétroMobile 2023 (6).webp
+assets/RétroMobile 2023.webp
+assets/Trophée 1.webp
+assets/Tropée 2.webp
+assets/Tropée 3.webp
+assets/Tropée 4.webp
+assets/Tropée sans cadre.webp
+assets/_ADE8687 - Copie.webp
+assets/_ADE8687.webp
+assets/©Palais Princier - Axel Bastello (90).webp
+assets/©Palais Princier - Axel Bastello (94).webp
+
+# Fichiers galerie-expos/ sans référence HTML
+# (Palais Princier, Monaco.jpg = brouillon non converti, remplacé par palais-princier-monaco.webp)
+# (Palais Princier, Monaco.webp = ancienne version orpheline, jamais raccordée au HTML, remplacée par palais-princier-monaco.webp)
+galerie-expos/Palais Princier, Monaco.jpg
+galerie-expos/Palais Princier, Monaco.webp
+
+# Autres orphelins
+.claude/settings.local.json
+_redirects
+style.css
