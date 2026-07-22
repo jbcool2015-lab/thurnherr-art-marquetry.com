@@ -870,6 +870,16 @@ section {
   .home-moonwatch-text {
     grid-template-columns: 1fr !important;
   }
+  .home-moonwatch-text > * {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+  }
+  .home-moonwatch-text .mw-desc1 { order: 1; }
+  .home-moonwatch-text .mw-title1 { order: 2; }
+  .home-moonwatch-text .mw-list1 { order: 3; padding-bottom: 2rem !important; }
+  .home-moonwatch-text .mw-desc2 { order: 4; }
+  .home-moonwatch-text .mw-title2 { order: 5; }
+  .home-moonwatch-text .mw-list2 { order: 6; }
 
   /* Propositions : colonne unique */
   .propositions-grid {

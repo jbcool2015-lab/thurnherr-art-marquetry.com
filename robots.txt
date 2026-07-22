@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.thurnherrartmarquetry.com/sitemap.xml
+Sitemap: https://thurnherr-art-marquetry.com/sitemap.xml

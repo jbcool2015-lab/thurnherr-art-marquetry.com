@@ -5,9 +5,6 @@ christophe thurnherr site-backup/
 # Fichiers Netlify/Carrd (inutile sur GitHub Pages)
 _redirects
 
-# CSS orphelin (non référencé dans le HTML)
-style.css
-
 # Fichiers système OS
 .DS_Store
 Thumbs.db
@@ -303,4 +300,3 @@ galerie-expos/Palais Princier, Monaco.webp
 # Autres orphelins
 .claude/settings.local.json
 _redirects
-style.css
