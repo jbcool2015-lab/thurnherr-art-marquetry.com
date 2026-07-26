@@ -578,6 +578,14 @@
       transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
     }
     .contact-form button:hover { background: #c9a96e; color: #0a0a0a; }
+    .contact-form button:disabled { opacity: 0.6; cursor: default; }
+    .contact-status {
+      color: rgba(240,233,220,0.55);
+      font-size: 0.78rem; letter-spacing: 0.04rem;
+      margin-top: 0.9rem; min-height: 1.2em;
+    }
+    .contact-status.is-success { color: #c9a96e; }
+    .contact-status.is-error { color: #d98b7a; }
     .contact-text p {
       color: rgba(240,233,220,0.55);
       font-size: clamp(0.9rem, 1.1vw, 1.05rem); line-height: 1.85;
@@ -1637,16 +1645,13 @@
       <p class="shop-intro" style="margin-bottom:0">Christophe répond personnellement à chaque message.</p>
     </div>
     <div class="contact-layout">
-      <form class="contact-form" data-animate id="contact-form" action="https://formsubmit.co/christophe.thurnherr@gmail.com" method="POST">
-        <input type="hidden" name="_subject" value="Nouveau message - Thurnherr Art Marquetry">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="_next" value="https://thurnherr-art-marquetry.com/#contact">
+      <form class="contact-form" data-animate id="contact-form">
         <input type="text" name="name" placeholder="Nom" required>
         <input type="email" name="email" placeholder="Email" required>
         <input type="tel" name="phone" placeholder="Numéro de téléphone" required>
         <textarea name="message" placeholder="Message" required></textarea>
         <button type="submit">Envoyer</button>
+        <div class="contact-status" data-contact-status role="status" aria-live="polite"></div>
       </form>
       <div class="contact-text" data-animate>
         <p>Christophe répond personnellement à chaque message. Pour une acquisition, un projet sur mesure ou toute question, n'hésitez pas à le contacter.</p>
@@ -1793,10 +1798,9 @@
     });
   }
   observeAll();
-
-  // Contact form submits natively to FormSubmit (see action attribute)
 })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="shop.js"></script>
 <script>
 (function () {

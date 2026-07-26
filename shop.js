@@ -17,6 +17,9 @@
       cartRemove: "Retirer",
       checkoutAlert: "Paiement simulé : aucune transaction réelle n'a été effectuée.",
       numberLocale: "fr-FR",
+      contactSending: "Envoi en cours…",
+      contactSuccess: "Message envoyé — merci, Christophe vous répondra rapidement.",
+      contactError: "Une erreur est survenue. Merci de réessayer ou d'écrire directement à christophe.thurnherr@gmail.com.",
     },
     en: {
       categories: {
@@ -33,8 +36,19 @@
       cartRemove: "Remove",
       checkoutAlert: "Simulated payment: no real transaction was made.",
       numberLocale: "en-GB",
+      contactSending: "Sending…",
+      contactSuccess: "Message sent — thank you, Christophe will reply shortly.",
+      contactError: "Something went wrong. Please try again or email christophe.thurnherr@gmail.com directly.",
     },
   };
+
+  const EMAILJS_SERVICE_ID = "service_31yghwb";
+  const EMAILJS_TEMPLATE_ID = "template_v0kshal";
+  const EMAILJS_PUBLIC_KEY = "zyGCfqt_hMA-2YmhB";
+
+  if (typeof emailjs !== "undefined") {
+    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY, limitRate: { id: "contact-form", throttle: 10000 } });
+  }
 
   const T = I18N[LANG];
 
@@ -497,6 +511,51 @@
     initEvents();
   }
 
+  function initContactForm() {
+    const form = document.querySelector("#contact-form");
+    if (!form) return;
+    const status = form.querySelector("[data-contact-status]");
+    const button = form.querySelector('button[type="submit"]');
+    const defaultButtonText = button ? button.textContent : "";
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!status) return;
+
+      if (typeof emailjs === "undefined") {
+        status.textContent = T.contactError;
+        status.classList.remove("is-success");
+        status.classList.add("is-error");
+        return;
+      }
+
+      const params = {
+        from_name: form.querySelector('[name="name"]')?.value || "",
+        from_email: form.querySelector('[name="email"]')?.value || "",
+        phone: form.querySelector('[name="phone"]')?.value || "",
+        message: form.querySelector('[name="message"]')?.value || "",
+      };
+
+      status.classList.remove("is-success", "is-error");
+      status.textContent = T.contactSending;
+      if (button) { button.disabled = true; button.textContent = T.contactSending; }
+
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
+        .then(() => {
+          status.textContent = T.contactSuccess;
+          status.classList.add("is-success");
+          form.reset();
+        })
+        .catch(() => {
+          status.textContent = T.contactError;
+          status.classList.add("is-error");
+        })
+        .finally(() => {
+          if (button) { button.disabled = false; button.textContent = defaultButtonText; }
+        });
+    });
+  }
+
   function hydrateDeferredImages() {
     document.querySelectorAll("img[data-src]").forEach((image) => {
       const realSource = image.getAttribute("data-src");
@@ -506,9 +565,14 @@
     });
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initShop);
-  } else {
+  function init() {
     initShop();
+    initContactForm();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
   }
 })();
