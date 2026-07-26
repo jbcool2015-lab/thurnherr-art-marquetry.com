@@ -18,7 +18,7 @@
       checkoutAlert: "Paiement simulé : aucune transaction réelle n'a été effectuée.",
       numberLocale: "fr-FR",
       contactSending: "Envoi en cours…",
-      contactSuccess: "Message envoyé — merci, Christophe vous répondra rapidement.",
+      contactSuccess: "📬 Message envoyé — merci, Christophe vous répondra rapidement. N'oubliez pas de consulter votre boîte mail.",
       contactError: "Une erreur est survenue. Merci de réessayer ou d'écrire directement à christophe.thurnherr@gmail.com.",
     },
     en: {
@@ -37,7 +37,7 @@
       checkoutAlert: "Simulated payment: no real transaction was made.",
       numberLocale: "en-GB",
       contactSending: "Sending…",
-      contactSuccess: "Message sent — thank you, Christophe will reply shortly.",
+      contactSuccess: "📬 Message sent — thank you, Christophe will get back to you soon. Don't forget to check your inbox.",
       contactError: "Something went wrong. Please try again or email christophe.thurnherr@gmail.com directly.",
     },
   };
