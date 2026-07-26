@@ -471,6 +471,12 @@
       transition: transform 0.9s cubic-bezier(0.4,0,0.2,1); width: 100%;
     }
     .detail-img:hover img { transform: scale(1.025); }
+    /* Long entry (technical text): images aligned to top */
+    #leclerc-section .detail-layout { align-items: start; }
+    /* Diptych: title and description aligned to top */
+    #dyptique1-section .detail-layout { align-items: start; }
+    /* Coat of arms: images aligned to top */
+    #armoiriemonaco-section .detail-layout { align-items: start; }
     .detail-info { text-align: center; }
     .detail-title {
       color: #f0e9dc; font-family: Cinzel, Georgia, serif;
@@ -504,9 +510,44 @@
     }
     .detail-back:hover { background: rgba(201,169,110,0.08); border-color: #c9a96e; color: #c9a96e; }
 
+    /* ── Button to the Technique & Craftsmanship page ── */
+    .detail-tech-link {
+      border: 1px solid rgba(201,169,110,0.45);
+      color: #c9a96e;
+      display: inline-block; font-size: 0.68rem;
+      letter-spacing: 0.14rem; margin-top: 2.5rem;
+      padding: 0.75rem 1.6rem; text-transform: uppercase;
+      transition: all 0.4s ease;
+    }
+    .detail-tech-link:hover { background: rgba(201,169,110,0.1); border-color: #c9a96e; }
+
+    /* ── Technique & Craftsmanship page ── */
+    .tech-page {
+      margin: 0 auto; max-width: 780px;
+      padding: clamp(5rem, 10vw, 9rem) clamp(1.5rem, 5vw, 5rem) clamp(3rem, 6vw, 6rem);
+    }
+    .tech-head {
+      border-bottom: 1px solid rgba(201,169,110,0.1);
+      margin-bottom: 3rem; padding-bottom: 3rem; text-align: center;
+    }
+    .tech-kicker {
+      color: #c9a96e; font-size: 0.68rem; letter-spacing: 0.28rem;
+      margin-bottom: 1.8rem; text-transform: uppercase;
+    }
+    .tech-title {
+      color: #f0e9dc; font-family: Cinzel, Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 400;
+      letter-spacing: 0.08rem; line-height: 1.15;
+    }
+    .tech-body p {
+      color: rgba(240,233,220,0.65);
+      font-size: clamp(0.9rem, 1.1vw, 1.05rem);
+      line-height: 1.85; margin-bottom: 1.3rem;
+    }
+    .tech-body p:last-of-type { margin-bottom: 0; }
+
     /* Multi-image detail */
     .detail-images { display: grid; gap: 1rem; }
-
 
     /* ── Contact ── */
     .contact-layout {
@@ -516,17 +557,18 @@
       padding: clamp(3rem, 6vw, 6rem) clamp(1.5rem, 5vw, 5rem);
     }
     .contact-form { display: flex; flex-direction: column; gap: 1rem; }
-    .contact-form input, .contact-form textarea {
+    #contact-form input, #contact-form textarea {
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(201,169,110,0.15);
       color: #f0e9dc; font-family: Alata, Arial, sans-serif;
       font-size: 0.9rem; padding: 0.85rem 1rem;
       transition: border-color 0.4s ease;
+      width: 100%;
     }
-    .contact-form input:focus, .contact-form textarea:focus {
+    #contact-form input:focus, #contact-form textarea:focus {
       border-color: #c9a96e; outline: none;
     }
-    .contact-form textarea { min-height: 140px; resize: vertical; }
+    #contact-form textarea { min-height: 140px; resize: vertical; }
     .contact-form button {
       background: transparent; border: 1px solid #c9a96e;
       color: #c9a96e; font-family: Alata, Arial, sans-serif;
@@ -1585,7 +1627,7 @@
 
 <!-- ══════ CONTACT ══════ -->
 <section id="contact-section" class="section-hidden">
-  <div class="section-inner">
+  <div class="shop-shell" style="padding:clamp(5rem,10vw,9rem) clamp(1rem,2.5vw,2.5rem)">
     <div style="text-align:center;border-bottom:1px solid rgba(201,169,110,0.1);padding-bottom:3rem;margin-bottom:3rem">
       <div class="shop-kicker">Workshop</div>
       <h2 class="shop-title">Contact</h2>
