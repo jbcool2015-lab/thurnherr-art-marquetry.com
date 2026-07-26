@@ -1,4 +1,43 @@
 ﻿(function () {
+  const LANG = document.documentElement.lang === "en" ? "en" : "fr";
+
+  const I18N = {
+    fr: {
+      categories: {
+        all: "Tout", automobile: "Automobile", animalier: "Animalier",
+        armoiries: "Armoiries", echiquier: "Échiquier", horlogerie: "Horlogerie", nautique: "Nautique",
+      },
+      available: "Disponible",
+      sold: "Collection privée",
+      uniquePiece: "Pièce unique",
+      defaultDescription: "Œuvre unique en marqueterie d'art.",
+      diptych: "Diptyque",
+      resultCount: (count) => `${count} œuvre${count > 1 ? "s" : ""}`,
+      cartEmpty: "Votre panier est vide.",
+      cartRemove: "Retirer",
+      checkoutAlert: "Paiement simulé : aucune transaction réelle n'a été effectuée.",
+      numberLocale: "fr-FR",
+    },
+    en: {
+      categories: {
+        all: "All", automobile: "Automotive", animalier: "Wildlife",
+        armoiries: "Heraldry", echiquier: "Chess", horlogerie: "Watchmaking", nautique: "Nautical",
+      },
+      available: "Available",
+      sold: "Private collection",
+      uniquePiece: "Unique piece",
+      defaultDescription: "Unique marquetry artwork.",
+      diptych: "Diptych",
+      resultCount: (count) => `${count} artwork${count > 1 ? "s" : ""}`,
+      cartEmpty: "Your cart is empty.",
+      cartRemove: "Remove",
+      checkoutAlert: "Simulated payment: no real transaction was made.",
+      numberLocale: "en-GB",
+    },
+  };
+
+  const T = I18N[LANG];
+
   const CATEGORY_SECTIONS = new Set([
     "home",
     "galleryall",
@@ -25,6 +64,9 @@
     "expopeugeot",
     "exposchlumpf",
     "expobeaune",
+    // Pages « Technique et mise en œuvre » : contenu éditorial, pas des œuvres
+    "techarmoiries",
+    "techleclerc",
   ]);
 
   const fallbackImages = [
@@ -44,16 +86,16 @@
   };
 
   const categories = [
-    { id: "all", label: "Tout" },
-    { id: "automobile", label: "Automobile" },
-    { id: "animalier", label: "Animalier" },
-    { id: "armoiries", label: "Armoiries" },
-    { id: "echiquier", label: "Échiquier" },
-    { id: "horlogerie", label: "Horlogerie" },
-    { id: "nautique", label: "Nautique" },
+    { id: "all", label: T.categories.all },
+    { id: "automobile", label: T.categories.automobile },
+    { id: "animalier", label: T.categories.animalier },
+    { id: "armoiries", label: T.categories.armoiries },
+    { id: "echiquier", label: T.categories.echiquier },
+    { id: "horlogerie", label: T.categories.horlogerie },
+    { id: "nautique", label: T.categories.nautique },
   ];
 
-  const money = new Intl.NumberFormat("fr-FR", {
+  const money = new Intl.NumberFormat(T.numberLocale, {
     currency: "EUR",
     maximumFractionDigits: 0,
     style: "currency",
@@ -84,14 +126,17 @@
     return nodes.map((node) => cleanText(node.textContent)).filter(Boolean);
   }
 
+  // Images de mise en situation : visibles sur la fiche détail, exclues du catalogue
+  const SHOP_IMAGE_SELECTOR = "img[data-src]:not([data-shop-exclude]), img[src]:not([data-shop-exclude])";
+
   function getSectionImage(section, index) {
-    const image = section.querySelector("img[data-src], img[src]");
+    const image = section.querySelector(SHOP_IMAGE_SELECTOR);
     if (!image) return fallbackImages[index % fallbackImages.length];
     return image.getAttribute("data-src") || image.getAttribute("src") || fallbackImages[index % fallbackImages.length];
   }
 
   function getSectionImages(section, index) {
-    const images = Array.from(section.querySelectorAll("img[data-src], img[src]"));
+    const images = Array.from(section.querySelectorAll(SHOP_IMAGE_SELECTOR));
     if (!images.length) return [fallbackImages[index % fallbackImages.length]];
     return images.map((img) => img.getAttribute("data-src") || img.getAttribute("src")).filter(Boolean);
   }
@@ -118,20 +163,28 @@
     return 0;
   }
 
+  // Prix affichés (en euros). Les œuvres absentes de cette table n'affichent pas de prix.
+  const PRICES = new Map([
+    ["f12rougesatine", 2800],
+    ["f12berlinettabrillant", 2800],
+    ["f12berlinetta2", 2800],
+  ]);
+
   const SOLD_SLUGS = new Set([
     "armoiriemonaco", "monacogp", "casino", "chat", "dog", "riva3", "riva2", "porscheprince", "astonmartin1",
-    "bugatti3", "bugatti4", "bugatti5", "bugatti6", "lotussuperseven", "porschegt3rs", "bonhomme", "jaguar"
+    "bugatti3", "bugatti4", "bugatti5", "bugatti6", "lotussuperseven", "porschegt3rs", "bonhomme", "jaguar",
+    "ferrarif12"
   ]);
 
   const HIDDEN_SLUGS = new Set([
-    "astonmartin1", "bonhomme", "chat", "lotussuperseven", "riva2", "bugatti4"
+    "astonmartin1", "bonhomme", "chat", "lotussuperseven", "riva2", "bugatti4", "jaguarxkr"
   ]);
 
   function getAvailability(slug, title, description) {
-    if (SOLD_SLUGS.has(slug)) return "Collection privée";
+    if (SOLD_SLUGS.has(slug)) return T.sold;
     const haystack = `${title} ${description}`.toLowerCase();
-    if (/collection sas|prince albert|collection priv/.test(haystack)) return "Collection privée";
-    return "Disponible";
+    if (/collection sas|prince albert|collection priv|private collection/.test(haystack)) return T.sold;
+    return T.available;
   }
 
   const ECHIQUIER_SLUGS = new Set([
@@ -141,9 +194,12 @@
 
   const ANIMALIER_SLUGS = new Set(["bonhomme"]);
 
+  const ARMOIRIES_SLUGS = new Set(["trophee"]);
+
   function productCategory(slug, title, description) {
     if (ECHIQUIER_SLUGS.has(slug)) return "echiquier";
     if (ANIMALIER_SLUGS.has(slug)) return "animalier";
+    if (ARMOIRIES_SLUGS.has(slug)) return "armoiries";
     const haystack = `${slug} ${title} ${description}`.toLowerCase();
     if (/echiquier|échiquier|chess/.test(haystack)) return "echiquier";
     if (/cheval|chat|dog|bouledogue|animal|persan|sang/.test(haystack)) return "animalier";
@@ -183,7 +239,7 @@
       const image = img?.getAttribute("data-src") || img?.getAttribute("src") || fallbackImages[index % fallbackImages.length];
       const details = sectionDetails.get(slug) || {};
       const title = details.title || prettifySlug(slug);
-      const description = details.description || "Œuvre unique en marqueterie d'art.";
+      const description = details.description || T.defaultDescription;
 
       seen.add(slug);
       products.push({
@@ -192,7 +248,7 @@
         description,
         id: slug,
         image,
-        price: 0,
+        price: PRICES.get(slug) || 0,
         title,
         url: `#${slug}`,
       });
@@ -209,11 +265,11 @@
       products.push({
         availability: getAvailability(slug, details.title, details.description),
         category: productCategory(slug, details.title, details.description),
-        description: details.description || "Œuvre unique en marqueterie d'art.",
+        description: details.description || T.defaultDescription,
         id: slug,
         image: details.image,
         images: DIPTYCH_SLUGS.has(slug) ? getSectionImages(section, products.length) : null,
-        price: 0,
+        price: PRICES.get(slug) || 0,
         title: details.title,
         url: `#${slug}`,
       });
@@ -258,7 +314,7 @@
   function updateResultCount(count) {
     const result = document.querySelector("[data-shop-results]");
     if (!result) return;
-    result.textContent = `${count} oeuvre${count > 1 ? "s" : ""}`;
+    result.textContent = T.resultCount(count);
   }
 
   function revealCards() {
@@ -297,6 +353,8 @@
     grid.innerHTML = products
       .map((product, index) => {
         const isDiptych = product.images && product.images.length > 1;
+        const categoryLabel = categories.find((category) => category.id === product.category)?.label;
+        const productLabel = categoryLabel ? `${categoryLabel} · ${T.uniquePiece}` : T.uniquePiece;
         const media = isDiptych
           ? `<div class="shop-media" style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
               ${product.images.map((src) => `<img src="${src}" alt="${product.title}" loading="lazy" style="aspect-ratio:1;width:100%;object-fit:cover;padding:0.6rem">`).join("")}
@@ -306,10 +364,11 @@
           <article class="shop-card${isDiptych ? " is-featured" : ""}" style="cursor:pointer" onclick="location.href='${product.url}'">
             ${media}
             <div class="shop-card-body">
-              <div class="shop-product-label">${categories.find((category) => category.id === product.category)?.label || "Pièce unique"}</div>
-              <h3>${product.title}${isDiptych ? ' <span style="font-family:Alata,sans-serif;font-size:0.65rem;letter-spacing:0.12rem;color:rgba(201,169,110,0.55);font-weight:400;text-transform:uppercase;vertical-align:middle;margin-left:0.5rem">Diptyque</span>' : ''}</h3>
+              <div class="shop-product-label">${productLabel}</div>
+              <h3>${product.title}${isDiptych ? ` <span style="font-family:Alata,sans-serif;font-size:0.65rem;letter-spacing:0.12rem;color:rgba(201,169,110,0.55);font-weight:400;text-transform:uppercase;vertical-align:middle;margin-left:0.5rem">${T.diptych}</span>` : ''}</h3>
               <div class="shop-actions">
-                <div class="shop-availability ${product.availability === 'Collection privée' ? 'is-sold' : 'is-available'}">${product.availability}</div>
+                <div class="shop-availability ${product.availability === T.sold ? 'is-sold' : 'is-available'}">${product.availability}</div>
+                ${product.price > 0 ? `<div class="shop-price">${money.format(product.price)}</div>` : ""}
               </div>
             </div>
           </article>
@@ -340,7 +399,7 @@
 
     if (!list) return;
     if (state.cart.length === 0) {
-      list.innerHTML = '<div class="shop-empty">Votre panier est vide.</div>';
+      list.innerHTML = `<div class="shop-empty">${T.cartEmpty}</div>`;
       closeCart();
       return;
     }
@@ -354,7 +413,7 @@
               <strong>${item.title}</strong>
               <span>${money.format(item.price)}</span>
             </div>
-            <button class="cart-remove" type="button" data-remove="${index}">Retirer</button>
+            <button class="cart-remove" type="button" data-remove="${index}">${T.cartRemove}</button>
           </div>
         `
       )
@@ -418,7 +477,7 @@
 
     document.querySelector("[data-checkout-form]")?.addEventListener("submit", (event) => {
       event.preventDefault();
-      alert("Paiement simulé : aucune transaction réelle n'a été effectuée.");
+      alert(T.checkoutAlert);
     });
 
     document.addEventListener("keydown", (event) => {

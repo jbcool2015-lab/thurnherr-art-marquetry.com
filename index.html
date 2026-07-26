@@ -546,17 +546,18 @@
       padding: clamp(3rem, 6vw, 6rem) clamp(1.5rem, 5vw, 5rem);
     }
     .contact-form { display: flex; flex-direction: column; gap: 1rem; }
-    .contact-form input, .contact-form textarea {
+    #contact-form input, #contact-form textarea {
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(201,169,110,0.15);
       color: #f0e9dc; font-family: Alata, Arial, sans-serif;
       font-size: 0.9rem; padding: 0.85rem 1rem;
       transition: border-color 0.4s ease;
+      width: 100%;
     }
-    .contact-form input:focus, .contact-form textarea:focus {
+    #contact-form input:focus, #contact-form textarea:focus {
       border-color: #c9a96e; outline: none;
     }
-    .contact-form textarea { min-height: 140px; resize: vertical; }
+    #contact-form textarea { min-height: 140px; resize: vertical; }
     .contact-form button {
       background: transparent; border: 1px solid #c9a96e;
       color: #c9a96e; font-family: Alata, Arial, sans-serif;
@@ -1605,7 +1606,7 @@
 
 <!-- ══════ CONTACT ══════ -->
 <section id="contact-section" class="section-hidden">
-  <div class="section-inner">
+  <div class="shop-shell" style="padding:clamp(5rem,10vw,9rem) clamp(1rem,2.5vw,2.5rem)">
     <div style="text-align:center;border-bottom:1px solid rgba(201,169,110,0.1);padding-bottom:3rem;margin-bottom:3rem">
       <div class="shop-kicker">Atelier</div>
       <h2 class="shop-title">Contact</h2>

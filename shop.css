@@ -273,7 +273,7 @@
 .shop-price {
   color: var(--shop-gold);
   font-family: Cinzel, Georgia, serif;
-  font-size: 1.15rem;
+  font-size: 0.64rem;
   letter-spacing: 0.03rem;
   white-space: nowrap;
 }
@@ -301,7 +301,9 @@
 
 /* ── Action buttons ── */
 .shop-actions {
+  align-items: center;
   display: flex;
+  gap: 1.4rem;
   justify-content: center;
   margin-top: auto;
 }
