@@ -172,7 +172,7 @@
 
   const SOLD_SLUGS = new Set([
     "armoiriemonaco", "monacogp", "casino", "chat", "dog", "riva3", "riva2", "porscheprince", "astonmartin1",
-    "bugatti3", "bugatti4", "bugatti5", "bugatti6", "lotussuperseven", "porschegt3rs", "bonhomme", "jaguar",
+    "bugatti3", "bugatti4", "bugatti5", "lotussuperseven", "porschegt3rs", "bonhomme", "jaguar",
     "ferrarif12"
   ]);
 

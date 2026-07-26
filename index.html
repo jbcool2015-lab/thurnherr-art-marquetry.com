@@ -2,6 +2,17 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
+  <script>
+  (function () {
+    var pref = null;
+    try { pref = localStorage.getItem('lang'); } catch (e) {}
+    if (!pref) {
+      var m = document.cookie.match(/(?:^|; )lang=(fr|en)/);
+      if (m) pref = m[1];
+    }
+    if (pref === 'en') location.replace('/en/');
+  })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Christophe Thurnherr — Marqueterie d'Art | Belfort</title>
   <meta name="description" content="Christophe Thurnherr, artiste marqueteur à Belfort. Marqueterie d'art : automobile, faune, horlogerie, armoiries. Catalogue et créations sur mesure.">
@@ -663,7 +674,7 @@
     <a href="#expo">Expositions</a>
     <a href="#contact">Contact</a>
     <div class="lux-lang-switch">
-      <a href="/" class="is-active" hreflang="fr">FR</a><span>/</span><a href="/en/" hreflang="en">EN</a>
+      <a href="/" class="is-active" hreflang="fr">FR</a><span>/</span><a href="/en/" hreflang="en" onclick="try{localStorage.setItem('lang','en')}catch(e){};document.cookie='lang=en;path=/;max-age=31536000;SameSite=Lax;Secure'">EN</a>
     </div>
   </nav>
 </header>
@@ -1472,7 +1483,7 @@
     <div class="detail-img" data-animate><img data-src="assets/images/image16.webp?v=1546ef1a" class="lazy" alt="Bugatti Type 55" width="2000" height="873"></div>
     <div class="detail-info" data-animate>
       <h2 class="detail-title">Bugatti Type 55 roadster 1932</h2><hr class="detail-divider">
-      <ul class="detail-desc"><li>62×27 cm</li><li>Collection privée</li></ul>
+      <ul class="detail-desc"><li>62×27 cm</li></ul>
       <a href="#boutique" class="detail-back">← Retour au Catalogue</a>
     </div>
   </div>

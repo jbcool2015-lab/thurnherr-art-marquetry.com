@@ -2,6 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <script>
+  (function () {
+    var pref = null;
+    try { pref = localStorage.getItem('lang'); } catch (e) {}
+    if (!pref) {
+      var m = document.cookie.match(/(?:^|; )lang=(fr|en)/);
+      if (m) pref = m[1];
+    }
+    if (pref === 'fr') location.replace('/');
+  })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Christophe Thurnherr — Marquetry Art | Belfort, France</title>
   <meta name="description" content="Christophe Thurnherr, fine wood marquetry artist in Belfort, France. Artworks: automotive, wildlife, watchmaking, heraldry. Catalogue and bespoke commissions.">
@@ -621,7 +632,7 @@
     <a href="#expo">Exhibitions</a>
     <a href="#contact">Contact</a>
     <div class="lux-lang-switch">
-      <a href="/" hreflang="fr">FR</a><span>/</span><a href="/en/" class="is-active" hreflang="en">EN</a>
+      <a href="/" hreflang="fr" onclick="try{localStorage.setItem('lang','fr')}catch(e){};document.cookie='lang=fr;path=/;max-age=31536000;SameSite=Lax;Secure'">FR</a><span>/</span><a href="/en/" class="is-active" hreflang="en">EN</a>
     </div>
   </nav>
 </header>
