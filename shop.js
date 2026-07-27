@@ -25,6 +25,7 @@
       acquisitionMessage: (title) => `Bonjour,\n\nJe souhaite acquérir l'œuvre « ${title} ». Merci de me recontacter pour connaître les modalités d'acquisition (devis, livraison).\n\n`,
       acquireCta: "Faire une offre d'acquisition",
       guarantees: ["Certificat d'authenticité inclus", "Livraison assurée et sécurisée"],
+      viewAcquireCta: "Voir & Acquérir",
     },
     en: {
       categories: {
@@ -49,6 +50,7 @@
       acquisitionMessage: (title) => `Hello,\n\nI would like to acquire the artwork "${title}". Please get back to me with the details on how to proceed (quote, delivery).\n\n`,
       acquireCta: "Make an acquisition offer",
       guarantees: ["Certificate of authenticity included", "Insured, secure delivery"],
+      viewAcquireCta: "View & Acquire",
     },
   };
 
@@ -238,6 +240,10 @@
     return "automobile";
   }
 
+  function escapeAttr(value) {
+    return String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+  }
+
   function collectProducts() {
     const sections = Array.from(document.querySelectorAll("section[id$='-section']"));
     const sectionDetails = new Map();
@@ -398,6 +404,7 @@
                 <div class="shop-availability ${product.availability === T.sold ? 'is-sold' : 'is-available'}">${product.availability}</div>
                 ${product.price > 0 ? `<div class="shop-price">${money.format(product.price)}</div>` : ""}
               </div>
+              ${product.availability !== T.sold ? `<a href="#contact" class="shop-button" style="width:100%" data-acquire-title="${escapeAttr(product.title)}" onclick="event.stopPropagation(); window.openAcquisitionRequest(this.dataset.acquireTitle)">${T.viewAcquireCta}</a>` : ""}
             </div>
           </article>
         `;
@@ -525,7 +532,7 @@
       if (!backLink || section.querySelector(".detail-acquire")) return;
       backLink.insertAdjacentHTML(
         "beforebegin",
-        `<a href="#contact" class="detail-back detail-acquire" data-acquire="${product.title}">${T.acquireCta}</a>`
+        `<a href="#contact" class="detail-back detail-acquire" data-acquire="${escapeAttr(product.title)}">${T.acquireCta}</a>`
       );
     });
   }
@@ -586,6 +593,7 @@
     location.hash = "contact";
     requestAnimationFrame(() => form.querySelector('[name="name"]')?.focus());
   }
+  window.openAcquisitionRequest = openAcquisitionRequest;
 
   function initContactForm() {
     const form = document.querySelector("#contact-form");
