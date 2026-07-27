@@ -24,6 +24,7 @@
       acquisitionNotice: (title) => `Demande d'acquisition — ${title}`,
       acquisitionMessage: (title) => `Bonjour,\n\nJe souhaite acquérir l'œuvre « ${title} ». Merci de me recontacter pour connaître les modalités d'acquisition (devis, livraison).\n\n`,
       acquireCta: "Faire une offre d'acquisition",
+      guarantees: ["Certificat d'authenticité inclus", "Livraison assurée et sécurisée"],
     },
     en: {
       categories: {
@@ -47,6 +48,7 @@
       acquisitionNotice: (title) => `Acquisition request — ${title}`,
       acquisitionMessage: (title) => `Hello,\n\nI would like to acquire the artwork "${title}". Please get back to me with the details on how to proceed (quote, delivery).\n\n`,
       acquireCta: "Make an acquisition offer",
+      guarantees: ["Certificate of authenticity included", "Insured, secure delivery"],
     },
   };
 
@@ -542,6 +544,20 @@
     });
   }
 
+  function injectGuarantees() {
+    const checkIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a96e" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>';
+    const items = T.guarantees.map((label) => `<li>${checkIcon}<span>${label}</span></li>`).join("");
+
+    state.products.forEach((product) => {
+      if (product.availability === T.sold) return;
+      const section = document.getElementById(`${product.id}-section`);
+      if (!section) return;
+      const desc = section.querySelector(".detail-desc");
+      if (!desc || section.querySelector(".detail-guarantees")) return;
+      desc.insertAdjacentHTML("afterend", `<ul class="detail-guarantees">${items}</ul>`);
+    });
+  }
+
   function initShop() {
     hydrateDeferredImages();
     const shop = document.querySelector("#boutique-section");
@@ -554,6 +570,7 @@
     initEvents();
     injectAcquisitionButtons();
     injectAvailabilityBadges();
+    injectGuarantees();
   }
 
   function openAcquisitionRequest(title) {
