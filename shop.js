@@ -20,6 +20,7 @@
       contactSending: "Envoi en cours…",
       contactSuccess: "📬 Message envoyé — merci, Christophe vous répondra rapidement. N'oubliez pas de consulter votre boîte mail.",
       contactError: "Une erreur est survenue. Merci de réessayer ou d'écrire directement à christophe.thurnherr@gmail.com.",
+      reproductionsLabel: "Reproductions du moment",
     },
     en: {
       categories: {
@@ -39,6 +40,7 @@
       contactSending: "Sending…",
       contactSuccess: "📬 Message sent — thank you, Christophe will get back to you soon. Don't forget to check your inbox.",
       contactError: "Something went wrong. Please try again or email christophe.thurnherr@gmail.com directly.",
+      reproductionsLabel: "Current Reproductions",
     },
   };
 
@@ -81,6 +83,8 @@
     // Pages « Technique et mise en œuvre » : contenu éditorial, pas des œuvres
     "techarmoiries",
     "techleclerc",
+    // Page d'annonce, pas une œuvre du catalogue
+    "reproductions",
   ]);
 
   const fallbackImages = [
@@ -309,12 +313,14 @@
     const filters = document.querySelector("[data-shop-filters]");
     if (!filters) return;
 
-    filters.innerHTML = categories
+    const categoryButtons = categories
       .map((category) => {
         const active = category.id === state.category ? " is-active" : "";
         return `<button class="shop-filter${active}" type="button" data-category="${category.id}">${category.label}</button>`;
       })
       .join("");
+
+    filters.innerHTML = `${categoryButtons}<a href="#reproductions" class="shop-filter shop-filter-external">${T.reproductionsLabel}</a>`;
   }
 
   function productMatches(product) {
