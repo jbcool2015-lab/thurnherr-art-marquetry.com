@@ -21,6 +21,8 @@
       contactSuccess: "📬 Message envoyé — merci, Christophe vous répondra rapidement. N'oubliez pas de consulter votre boîte mail.",
       contactError: "Une erreur est survenue. Merci de réessayer ou d'écrire directement à christophe.thurnherr@gmail.com.",
       reproductionsLabel: "Reproductions du moment",
+      acquisitionNotice: (title) => `Demande d'acquisition — ${title}`,
+      acquisitionMessage: (title) => `Bonjour,\n\nJe souhaite acquérir l'œuvre « ${title} ». Merci de me recontacter pour connaître les modalités d'acquisition (devis, livraison).\n\n`,
     },
     en: {
       categories: {
@@ -41,6 +43,8 @@
       contactSuccess: "📬 Message sent — thank you, Christophe will get back to you soon. Don't forget to check your inbox.",
       contactError: "Something went wrong. Please try again or email christophe.thurnherr@gmail.com directly.",
       reproductionsLabel: "Current Reproductions",
+      acquisitionNotice: (title) => `Acquisition request — ${title}`,
+      acquisitionMessage: (title) => `Hello,\n\nI would like to acquire the artwork "${title}". Please get back to me with the details on how to proceed (quote, delivery).\n\n`,
     },
   };
 
@@ -483,6 +487,9 @@
       if (event.target.closest("[data-checkout-open]")) {
         document.querySelector("[data-checkout-form]")?.classList.add("is-open");
       }
+
+      const acquire = event.target.closest("[data-acquire]");
+      if (acquire) openAcquisitionRequest(acquire.getAttribute("data-acquire"));
     });
 
     document.querySelector("[data-shop-search]")?.addEventListener("input", (event) => {
@@ -515,6 +522,20 @@
     renderProducts();
     renderCart();
     initEvents();
+  }
+
+  function openAcquisitionRequest(title) {
+    const form = document.querySelector("#contact-form");
+    if (!form) return;
+    const messageField = form.querySelector('[name="message"]');
+    if (messageField) messageField.value = T.acquisitionMessage(title);
+    const notice = document.querySelector("[data-acquisition-notice]");
+    if (notice) {
+      notice.textContent = T.acquisitionNotice(title);
+      notice.style.display = "block";
+    }
+    location.hash = "contact";
+    requestAnimationFrame(() => form.querySelector('[name="name"]')?.focus());
   }
 
   function initContactForm() {
