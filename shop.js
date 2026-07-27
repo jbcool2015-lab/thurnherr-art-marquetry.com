@@ -23,6 +23,7 @@
       reproductionsLabel: "Reproductions du moment",
       acquisitionNotice: (title) => `Demande d'acquisition — ${title}`,
       acquisitionMessage: (title) => `Bonjour,\n\nJe souhaite acquérir l'œuvre « ${title} ». Merci de me recontacter pour connaître les modalités d'acquisition (devis, livraison).\n\n`,
+      acquireCta: "Faire une offre d'acquisition",
     },
     en: {
       categories: {
@@ -45,6 +46,7 @@
       reproductionsLabel: "Current Reproductions",
       acquisitionNotice: (title) => `Acquisition request — ${title}`,
       acquisitionMessage: (title) => `Hello,\n\nI would like to acquire the artwork "${title}". Please get back to me with the details on how to proceed (quote, delivery).\n\n`,
+      acquireCta: "Make an acquisition offer",
     },
   };
 
@@ -512,6 +514,20 @@
     });
   }
 
+  function injectAcquisitionButtons() {
+    state.products.forEach((product) => {
+      if (product.availability === T.sold) return;
+      const section = document.getElementById(`${product.id}-section`);
+      if (!section) return;
+      const backLink = section.querySelector(".detail-back");
+      if (!backLink || section.querySelector(".detail-acquire")) return;
+      backLink.insertAdjacentHTML(
+        "beforebegin",
+        `<a href="#contact" class="detail-back detail-acquire" data-acquire="${product.title}">${T.acquireCta}</a>`
+      );
+    });
+  }
+
   function initShop() {
     hydrateDeferredImages();
     const shop = document.querySelector("#boutique-section");
@@ -522,6 +538,7 @@
     renderProducts();
     renderCart();
     initEvents();
+    injectAcquisitionButtons();
   }
 
   function openAcquisitionRequest(title) {
