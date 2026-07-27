@@ -13,16 +13,13 @@
       defaultDescription: "Œuvre unique en marqueterie d'art.",
       diptych: "Diptyque",
       resultCount: (count) => `${count} œuvre${count > 1 ? "s" : ""}`,
-      cartEmpty: "Votre panier est vide.",
-      cartRemove: "Retirer",
-      checkoutAlert: "Paiement simulé : aucune transaction réelle n'a été effectuée.",
       numberLocale: "fr-FR",
       contactSending: "Envoi en cours…",
       contactSuccess: "📬 Message envoyé — merci, Christophe vous répondra rapidement. N'oubliez pas de consulter votre boîte mail.",
       contactError: "Une erreur est survenue. Merci de réessayer ou d'écrire directement à christophe.thurnherr@gmail.com.",
       reproductionsLabel: "Reproductions du moment",
       acquisitionNotice: (title) => `Demande d'acquisition — ${title}`,
-      acquisitionMessage: (title) => `Bonjour,\n\nJe souhaite acquérir l'œuvre « ${title} ». Merci de me recontacter pour connaître les modalités d'acquisition (devis, livraison).\n\n`,
+      acquisitionMessage: (title) => `Bonjour,\n\nJe souhaite en savoir plus sur l'œuvre « ${title} ». Merci de m'envoyer les modalités d'acquisition (prix, fiche technique détaillée, livraison, etc.).\n\n`,
       acquireCta: "Faire une offre d'acquisition",
       guarantees: ["Certificat d'authenticité inclus", "Livraison assurée et sécurisée"],
       viewAcquireCta: "Voir & Acquérir",
@@ -38,16 +35,13 @@
       defaultDescription: "Unique marquetry artwork.",
       diptych: "Diptych",
       resultCount: (count) => `${count} artwork${count > 1 ? "s" : ""}`,
-      cartEmpty: "Your cart is empty.",
-      cartRemove: "Remove",
-      checkoutAlert: "Simulated payment: no real transaction was made.",
       numberLocale: "en-GB",
       contactSending: "Sending…",
       contactSuccess: "📬 Message sent — thank you, Christophe will get back to you soon. Don't forget to check your inbox.",
       contactError: "Something went wrong. Please try again or email christophe.thurnherr@gmail.com directly.",
       reproductionsLabel: "Current Reproductions",
       acquisitionNotice: (title) => `Acquisition request — ${title}`,
-      acquisitionMessage: (title) => `Hello,\n\nI would like to acquire the artwork "${title}". Please get back to me with the details on how to proceed (quote, delivery).\n\n`,
+      acquisitionMessage: (title) => `Hello,\n\nI would like to know more about the artwork "${title}". Please send me the details on how to proceed (price, full technical sheet, delivery, etc.).\n\n`,
       acquireCta: "Make an acquisition offer",
       guarantees: ["Certificate of authenticity included", "Insured, secure delivery"],
       viewAcquireCta: "View & Acquire",
@@ -107,7 +101,6 @@
 
   const state = {
     category: "all",
-    cart: [],
     products: [],
     query: "",
     sort: "featured",
@@ -414,80 +407,8 @@
     revealCards();
   }
 
-  function cartTotal() {
-    return state.cart.reduce((sum, item) => sum + item.price, 0);
-  }
-
-  function renderCart() {
-    const list = document.querySelector("[data-cart-list]");
-    const count = document.querySelector("[data-cart-count]");
-    const total = document.querySelector("[data-cart-total]");
-    const checkoutButton = document.querySelector("[data-checkout-open]");
-    const cartToggles = document.querySelectorAll("[data-cart-open]");
-
-    if (count) count.textContent = String(state.cart.length);
-    if (total) total.textContent = money.format(cartTotal());
-    if (checkoutButton) checkoutButton.disabled = state.cart.length === 0;
-    cartToggles.forEach((toggle) => {
-      toggle.classList.toggle("is-hidden", state.cart.length === 0);
-    });
-
-    if (!list) return;
-    if (state.cart.length === 0) {
-      list.innerHTML = `<div class="shop-empty">${T.cartEmpty}</div>`;
-      closeCart();
-      return;
-    }
-
-    list.innerHTML = state.cart
-      .map(
-        (item, index) => `
-          <div class="cart-line">
-            <img src="${item.image}" alt="${item.title}">
-            <div>
-              <strong>${item.title}</strong>
-              <span>${money.format(item.price)}</span>
-            </div>
-            <button class="cart-remove" type="button" data-remove="${index}">${T.cartRemove}</button>
-          </div>
-        `
-      )
-      .join("");
-  }
-
-  function addToCart(productId) {
-    const product = state.products.find((item) => item.id === productId);
-    if (!product) return;
-    state.cart.push(product);
-    renderCart();
-    openCart();
-  }
-
-  function openCart() {
-    document.querySelector("[data-cart-modal]")?.classList.add("is-open");
-    document.body.classList.add("shop-cart-open");
-  }
-
-  function closeCart() {
-    document.querySelector("[data-cart-modal]")?.classList.remove("is-open");
-    document.body.classList.remove("shop-cart-open");
-  }
-
   function initEvents() {
     document.addEventListener("click", (event) => {
-      const add = event.target.closest("[data-add]");
-      if (add) addToCart(add.getAttribute("data-add"));
-
-      const remove = event.target.closest("[data-remove]");
-      if (remove) {
-        state.cart.splice(Number(remove.getAttribute("data-remove")), 1);
-        renderCart();
-      }
-
-      if (event.target.closest("[data-cart-open]")) openCart();
-      if (event.target.closest("[data-cart-close]")) closeCart();
-      if (event.target.matches("[data-cart-modal]")) closeCart();
-
       const category = event.target.closest("[data-category]");
       if (category) {
         state.category = category.getAttribute("data-category");
@@ -495,12 +416,13 @@
         renderProducts();
       }
 
-      if (event.target.closest("[data-checkout-open]")) {
-        document.querySelector("[data-checkout-form]")?.classList.add("is-open");
-      }
-
       const acquire = event.target.closest("[data-acquire]");
       if (acquire) openAcquisitionRequest(acquire.getAttribute("data-acquire"));
+
+      const contactLink = event.target.closest('a[href="#contact"]');
+      if (contactLink && !contactLink.hasAttribute("data-acquire") && !contactLink.hasAttribute("data-acquire-title")) {
+        resetContactForm();
+      }
     });
 
     document.querySelector("[data-shop-search]")?.addEventListener("input", (event) => {
@@ -511,15 +433,6 @@
     document.querySelector("[data-shop-sort]")?.addEventListener("change", (event) => {
       state.sort = event.target.value;
       renderProducts();
-    });
-
-    document.querySelector("[data-checkout-form]")?.addEventListener("submit", (event) => {
-      event.preventDefault();
-      alert(T.checkoutAlert);
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") closeCart();
     });
   }
 
@@ -573,11 +486,22 @@
     ensureShopChrome();
     renderFilters();
     renderProducts();
-    renderCart();
     initEvents();
     injectAcquisitionButtons();
     injectAvailabilityBadges();
     injectGuarantees();
+  }
+
+  function resetContactForm() {
+    const form = document.querySelector("#contact-form");
+    if (!form) return;
+    const messageField = form.querySelector('[name="message"]');
+    if (messageField) messageField.value = "";
+    const notice = document.querySelector("[data-acquisition-notice]");
+    if (notice) {
+      notice.textContent = "";
+      notice.style.display = "none";
+    }
   }
 
   function openAcquisitionRequest(title) {
