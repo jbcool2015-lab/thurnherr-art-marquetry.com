@@ -528,6 +528,20 @@
     });
   }
 
+  function injectAvailabilityBadges() {
+    state.products.forEach((product) => {
+      const section = document.getElementById(`${product.id}-section`);
+      if (!section) return;
+      const title = section.querySelector(".detail-title");
+      if (!title || section.querySelector(".detail-availability-badge")) return;
+      const badgeClass = product.availability === T.sold ? "is-sold" : "is-available";
+      title.insertAdjacentHTML(
+        "afterend",
+        `<div class="shop-availability ${badgeClass} detail-availability-badge">${product.availability}</div>`
+      );
+    });
+  }
+
   function initShop() {
     hydrateDeferredImages();
     const shop = document.querySelector("#boutique-section");
@@ -539,6 +553,7 @@
     renderCart();
     initEvents();
     injectAcquisitionButtons();
+    injectAvailabilityBadges();
   }
 
   function openAcquisitionRequest(title) {
