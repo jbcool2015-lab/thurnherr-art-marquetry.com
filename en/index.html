@@ -662,6 +662,15 @@
     @media (max-width: 480px) {
       .lux-header-nav a { font-size: 0.68rem; }
     }
+    .hero-title {
+      font-size: clamp(2.8rem, 6vw, 5.2rem);
+      overflow-wrap: normal;
+      word-break: keep-all;
+      hyphens: none;
+    }
+    @media (max-width: 480px) {
+      .hero-title { font-size: clamp(1.9rem, 9vw, 2.6rem); }
+    }
     #expo-masonry {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -716,7 +725,7 @@
   <!-- ── Accroche ── -->
   <div style="text-align:center;padding:clamp(5rem,10vw,9rem) clamp(1.5rem,5vw,5rem) 3rem;border-bottom:1px solid rgba(201,169,110,0.1)">
     <p style="color:#c9a96e;font-size:0.68rem;letter-spacing:0.28rem;text-transform:uppercase;margin-bottom:1.8rem;margin-left:0.14rem" data-animate>Christophe Thurnherr</p>
-    <h1 style="font-family:Cinzel,Georgia,serif;font-size:clamp(2.8rem,6vw,5.2rem);font-weight:400;color:#f0e9dc;line-height:0.95;letter-spacing:0.12rem;margin-bottom:1.4rem" data-animate>The Art of Marquetry</h1>
+    <h1 class="hero-title" style="font-family:Cinzel,Georgia,serif;font-weight:400;color:#f0e9dc;line-height:0.95;letter-spacing:0.12rem;margin-bottom:1.4rem" data-animate>The Art of Marquetry</h1>
     <p style="color:rgba(240,233,220,0.65);font-size:clamp(0.9rem,1.1vw,1.05rem);line-height:1.85;max-width:44rem;margin:0 auto" data-animate>Unique artworks in precious wood — the art of elevating raw material, from sketch to finished lacquered piece.</p>
   </div>
 
