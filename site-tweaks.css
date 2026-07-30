@@ -904,6 +904,7 @@ section {
 
   .detail-layout .detail-img,
   .detail-layout .detail-images,
+  .detail-layout .detail-gallery,
   .detail-layout .detail-info {
     width: 100% !important;
     max-width: 100% !important;
@@ -1015,5 +1016,236 @@ section {
   #galleryall-section #links05 a {
     font-size: 0.65rem !important;
     padding: 0.45rem 0.8rem !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CERTIFICATION BANNER — Label Fédération des Sites Historiques
+   Grimaldi de Monaco
+   ══════════════════════════════════════════════════════════════ */
+.cert-banner {
+  background: rgba(201, 169, 110, 0.05);
+  border-bottom: 1px solid rgba(201, 169, 110, 0.12);
+  padding: clamp(1.6rem, 3vw, 2.2rem) clamp(1.5rem, 5vw, 5rem);
+}
+
+.cert-banner-inner {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1rem, 3vw, 2rem);
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 1100px;
+}
+
+.cert-banner-seal {
+  display: block;
+  flex-shrink: 0;
+  height: auto;
+  width: clamp(52px, 6vw, 68px);
+}
+
+.cert-banner-text {
+  flex: 1 1 320px;
+  max-width: 40rem;
+  min-width: 0;
+  text-align: center;
+}
+
+.cert-banner-eyebrow {
+  color: var(--lux-gold);
+  font-size: 0.62rem;
+  letter-spacing: 0.22rem;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+}
+
+.cert-banner-headline {
+  color: var(--lux-cream);
+  font-family: var(--lux-display);
+  font-size: clamp(0.92rem, 1.6vw, 1.08rem);
+  font-weight: 400;
+  letter-spacing: 0.01rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.cert-banner-link {
+  background: transparent;
+  border: 1px solid var(--lux-gold);
+  color: var(--lux-gold);
+  cursor: pointer;
+  flex-shrink: 0;
+  font: 0.68rem Alata, Arial, sans-serif;
+  letter-spacing: 0.1rem;
+  min-height: 2.4rem;
+  padding: 0 1.1rem;
+  text-transform: uppercase;
+  transition: background var(--lux-speed) var(--lux-ease), color var(--lux-speed) var(--lux-ease);
+  white-space: nowrap;
+}
+
+.cert-banner-link:hover,
+.cert-banner-link:focus-visible {
+  background: var(--lux-gold);
+  color: var(--lux-black);
+}
+
+@media (min-width: 641px) {
+  .cert-banner-text { text-align: left; }
+}
+
+/* ── Modale certificat ── */
+.cert-modal {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(6px);
+  display: none;
+  inset: 0;
+  justify-content: center;
+  padding: clamp(1.2rem, 4vw, 3rem);
+  position: fixed;
+  z-index: 10010;
+}
+
+.cert-modal.is-open { display: flex; }
+
+.cert-modal-panel {
+  max-height: 90vh;
+  max-width: min(94vw, 900px);
+  position: relative;
+}
+
+.cert-modal-panel img {
+  border-radius: 2px;
+  box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.6);
+  display: block;
+  height: auto;
+  max-height: 90vh;
+  width: 100%;
+}
+
+.cert-modal-close {
+  background: rgba(10, 10, 10, 0.85);
+  border: 1px solid var(--lux-gold);
+  border-radius: 50%;
+  color: var(--lux-gold);
+  cursor: pointer;
+  font-size: 1.2rem;
+  height: 2.2rem;
+  line-height: 1;
+  position: absolute;
+  right: 0.6rem;
+  top: 0.6rem;
+  width: 2.2rem;
+}
+
+.cert-modal-close:hover {
+  background: var(--lux-gold);
+  color: var(--lux-black);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GALERIE MULTI-PHOTOS — fiche œuvre (carrousel)
+   ══════════════════════════════════════════════════════════════ */
+.detail-gallery {
+  overflow: hidden;
+  position: relative;
+}
+
+.detail-gallery-track {
+  display: flex;
+  transition: transform var(--lux-speed) var(--lux-ease);
+}
+
+.detail-gallery-slide {
+  flex: 0 0 100%;
+  overflow: hidden;
+  width: 100%;
+}
+
+.detail-gallery-slide img {
+  display: block;
+  max-height: 82vh;
+  object-fit: contain;
+  transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+}
+
+.detail-gallery:hover .detail-gallery-slide img {
+  transform: scale(1.025);
+}
+
+.detail-gallery-nav {
+  align-items: center;
+  background: rgba(10, 10, 10, 0.55);
+  border: 1px solid rgba(201, 169, 110, 0.4);
+  border-radius: 50%;
+  color: var(--lux-gold);
+  cursor: pointer;
+  display: flex;
+  height: 2.6rem;
+  justify-content: center;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: background var(--lux-speed) var(--lux-ease), border-color var(--lux-speed) var(--lux-ease), opacity var(--lux-speed) var(--lux-ease);
+  width: 2.6rem;
+  z-index: 2;
+}
+
+.detail-gallery:hover .detail-gallery-nav,
+.detail-gallery-nav:focus-visible {
+  opacity: 1;
+}
+
+.detail-gallery-nav:hover {
+  background: var(--lux-gold);
+  border-color: var(--lux-gold);
+  color: var(--lux-black);
+}
+
+.detail-gallery-prev { left: 0.8rem; }
+.detail-gallery-next { right: 0.8rem; }
+
+.detail-gallery-dots {
+  bottom: 0.9rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  right: 0;
+  z-index: 2;
+}
+
+.detail-gallery-dot {
+  background: rgba(240, 233, 220, 0.35);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 0.5rem;
+  padding: 0;
+  transition: background var(--lux-speed) var(--lux-ease), transform var(--lux-speed) var(--lux-ease);
+  width: 0.5rem;
+}
+
+.detail-gallery-dot.is-active {
+  background: var(--lux-gold);
+  transform: scale(1.3);
+}
+
+.detail-gallery.is-single .detail-gallery-nav,
+.detail-gallery.is-single .detail-gallery-dots {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .detail-gallery-nav {
+    height: 2.2rem;
+    opacity: 1;
+    width: 2.2rem;
   }
 }

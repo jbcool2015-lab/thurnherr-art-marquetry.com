@@ -385,7 +385,7 @@
 }
   </script>
   <link rel="stylesheet" href="/style.css?v=9e52217aa0">
-  <link rel="stylesheet" href="/site-tweaks.css?v=4df28d7132">
+  <link rel="stylesheet" href="/site-tweaks.css?v=748b2e8ae8">
   <link rel="stylesheet" href="/shop.css?v=731aa3c8a9">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -728,6 +728,59 @@
     <h1 class="hero-title" style="font-family:Cinzel,Georgia,serif;font-weight:400;color:#f0e9dc;line-height:0.95;letter-spacing:0.12rem;margin-bottom:1.4rem" data-animate>The Art of Marquetry</h1>
     <p style="color:rgba(240,233,220,0.65);font-size:clamp(0.9rem,1.1vw,1.05rem);line-height:1.85;max-width:44rem;margin:0 auto" data-animate>Unique artworks in precious wood — the art of elevating raw material, from sketch to finished lacquered piece.</p>
   </div>
+
+  <!-- ── Official certification ── -->
+  <div class="cert-banner" data-animate>
+    <div class="cert-banner-inner">
+      <img src="/assets/images/label-grimaldi-monaco-sceau.webp" alt="Seal of the Federation of Historic Grimaldi Sites of Monaco label" class="cert-banner-seal" width="300" height="280" loading="lazy">
+      <div class="cert-banner-text">
+        <p class="cert-banner-eyebrow">Official certification</p>
+        <p class="cert-banner-headline">Officially certified by the Federation of Historic Grimaldi Sites of Monaco</p>
+      </div>
+      <button type="button" class="cert-banner-link" data-cert-open>View certification</button>
+    </div>
+  </div>
+
+  <div class="cert-modal" data-cert-modal aria-hidden="true">
+    <div class="cert-modal-panel" role="dialog" aria-modal="true" aria-label="Certificate of the Federation of Historic Grimaldi Sites of Monaco label">
+      <button type="button" class="cert-modal-close" data-cert-close aria-label="Close">&times;</button>
+      <img src="/assets/images/label-grimaldi-monaco-certificat.webp" alt="Certificate of the Federation of Historic Grimaldi Sites of Monaco label awarded to Thurnherr Art Marquetry for the year 2025" width="1599" height="1257" loading="lazy">
+    </div>
+  </div>
+  <script>
+  (function () {
+    var modal = document.querySelector('[data-cert-modal]');
+    if (!modal) return;
+    var openBtn = document.querySelector('[data-cert-open]');
+    var lastFocus = null;
+
+    function open() {
+      lastFocus = document.activeElement;
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      var closeBtn = modal.querySelector('[data-cert-close]');
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function close() {
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if (lastFocus) lastFocus.focus();
+    }
+
+    if (openBtn) openBtn.addEventListener('click', open);
+
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal || e.target.closest('[data-cert-close]')) close();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && modal.classList.contains('is-open')) close();
+    });
+  })();
+  </script>
 
   <!-- ── Qui est Christophe Thurnherr ? ── -->
   <div style="max-width:1400px;margin:0 auto;padding:clamp(5rem,10vw,8rem) clamp(1rem,3vw,2.5rem) clamp(3rem,5vw,5rem)" id="christophethurnherr">
@@ -1104,7 +1157,17 @@
 <!-- ══════ DETAIL: Honda McLaren (Prost vs Senna 1989) ══════ -->
 <section id="hondamclaren-section" class="section-hidden">
   <div class="detail-layout">
-    <div class="detail-img" data-animate><img data-src="/assets/images/image19.webp?v=1546ef1a" class="lazy" alt="Prost VS Senna 1989" width="2000" height="1999"></div>
+    <div class="detail-gallery" data-animate data-gallery role="region" aria-roledescription="carousel" aria-label="Artwork photos">
+      <div class="detail-gallery-track">
+        <div class="detail-gallery-slide"><img data-src="/assets/images/image19.webp?v=1546ef1a" class="lazy" alt="Prost VS Senna 1989" width="2000" height="1999"></div>
+        <div class="detail-gallery-slide"><img data-src="/assets/images/echiquier-verso-plaque-inox.webp" class="lazy" alt="Back of the chess set with engraved stainless steel plate — Thurnherr Art Marquetry" width="2000" height="1997"></div>
+        <div class="detail-gallery-slide"><img data-src="/assets/images/echiquier-plaque-inox-gravee.webp" class="lazy" alt="Brushed stainless steel plate engraved on the back of the chess set" width="2000" height="1051"></div>
+        <div class="detail-gallery-slide"><img data-src="/assets/images/echiquier-plaque-inox-gravee-detail.webp" class="lazy" alt="Detail of the engraved stainless steel plate" width="950" height="673"></div>
+      </div>
+      <button type="button" class="detail-gallery-nav detail-gallery-prev" data-gallery-prev aria-label="Previous photo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <button type="button" class="detail-gallery-nav detail-gallery-next" data-gallery-next aria-label="Next photo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      <div class="detail-gallery-dots" data-gallery-dots></div>
+    </div>
     <div class="detail-info" data-animate>
       <h2 class="detail-title">Prost VS Senna — 1989</h2><hr class="detail-divider">
       <ul class="detail-desc"><li>1989 Formula 1 World Championship</li><li>1,020 pieces</li><li>51×51 cm</li><li>300 hours of work</li></ul>
@@ -1116,7 +1179,17 @@
 <!-- ══════ DETAIL: Honda Ferrari (Prost vs Senna 1990) ══════ -->
 <section id="hondaferrari-section" class="section-hidden">
   <div class="detail-layout">
-    <div class="detail-img" data-animate><img data-src="/assets/images/image20.webp?v=1546ef1a" class="lazy" alt="Prost VS Senna" width="2000" height="1987"></div>
+    <div class="detail-gallery" data-animate data-gallery role="region" aria-roledescription="carousel" aria-label="Artwork photos">
+      <div class="detail-gallery-track">
+        <div class="detail-gallery-slide"><img data-src="/assets/images/image20.webp?v=1546ef1a" class="lazy" alt="Prost VS Senna" width="2000" height="1987"></div>
+        <div class="detail-gallery-slide"><img data-src="/assets/images/echiquier-verso-plaque-inox.webp" class="lazy" alt="Back of the chess set with engraved stainless steel plate — Thurnherr Art Marquetry" width="2000" height="1997"></div>
+        <div class="detail-gallery-slide"><img data-src="/assets/images/echiquier-plaque-inox-gravee.webp" class="lazy" alt="Brushed stainless steel plate engraved on the back of the chess set" width="2000" height="1051"></div>
+        <div class="detail-gallery-slide"><img data-src="/assets/images/echiquier-plaque-inox-gravee-detail.webp" class="lazy" alt="Detail of the engraved stainless steel plate" width="950" height="673"></div>
+      </div>
+      <button type="button" class="detail-gallery-nav detail-gallery-prev" data-gallery-prev aria-label="Previous photo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <button type="button" class="detail-gallery-nav detail-gallery-next" data-gallery-next aria-label="Next photo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      <div class="detail-gallery-dots" data-gallery-dots></div>
+    </div>
     <div class="detail-info" data-animate>
       <h2 class="detail-title">Prost VS Senna — 1990</h2><hr class="detail-divider">
       <ul class="detail-desc"><li>1,200 pieces</li><li>12 wood species</li><li>51×51 cm</li><li>Open-pore satin lacquer</li><li>1990 Formula 1 World Championship</li></ul>
@@ -1128,7 +1201,17 @@
 <!-- ══════ DETAIL: Monaco GP (Prost vs Senna Monaco 1990) ══════ -->
 <section id="monacogp-section" class="section-hidden">
   <div class="detail-layout">
-    <div class="detail-img" data-animate><img data-src="/assets/images/image21.webp?v=1546ef1a" class="lazy" alt="Monaco Grand Prix 1989" width="2000" height="1997"></div>
+    <div class="detail-gallery" data-animate data-gallery role="region" aria-roledescription="carousel" aria-label="Artwork photos">
+      <div class="detail-gallery-track">
+        <div class="detail-gallery-slide"><img data-src="/assets/images/image21.webp?v=1546ef1a" class="lazy" alt="Monaco Grand Prix 1989" width="2000" height="1997"></div>
+        <div class="detail-gallery-slide"><img data-src="/assets/images/echiquier-verso-plaque-inox.webp" class="lazy" alt="Back of the chess set with engraved stainless steel plate — Thurnherr Art Marquetry" width="2000" height="1997"></div>
+        <div class="detail-gallery-slide"><img data-src="/assets/images/echiquier-plaque-inox-gravee.webp" class="lazy" alt="Brushed stainless steel plate engraved on the back of the chess set" width="2000" height="1051"></div>
+        <div class="detail-gallery-slide"><img data-src="/assets/images/echiquier-plaque-inox-gravee-detail.webp" class="lazy" alt="Detail of the engraved stainless steel plate" width="950" height="673"></div>
+      </div>
+      <button type="button" class="detail-gallery-nav detail-gallery-prev" data-gallery-prev aria-label="Previous photo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <button type="button" class="detail-gallery-nav detail-gallery-next" data-gallery-next aria-label="Next photo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      <div class="detail-gallery-dots" data-gallery-dots></div>
+    </div>
     <div class="detail-info" data-animate>
       <h2 class="detail-title">Prost VS Senna — Monaco 1990</h2><hr class="detail-divider">
       <ul class="detail-desc"><li>1,000 pieces</li><li>10 wood species</li><li>55×55 cm</li><li>Open-pore satin lacquer</li><li>Collection of HSH Prince Albert II of Monaco</li></ul>
@@ -1167,7 +1250,17 @@
 <!-- ══════ DETAIL: Le Mans 70 Blanc ══════ -->
 <section id="lemans70blanc-section" class="section-hidden">
   <div class="detail-layout">
-    <div class="detail-img" data-animate><img data-src="/assets/images/image14.webp?v=1546ef1a" class="lazy" alt="Porsche 917LH VS Porsche 917K chess set, ivory board" width="2000" height="1994"></div>
+    <div class="detail-gallery" data-animate data-gallery role="region" aria-roledescription="carousel" aria-label="Artwork photos">
+      <div class="detail-gallery-track">
+        <div class="detail-gallery-slide"><img data-src="/assets/images/image14.webp?v=1546ef1a" class="lazy" alt="Porsche 917LH VS Porsche 917K chess set, ivory board" width="2000" height="1994"></div>
+        <div class="detail-gallery-slide"><img data-src="/assets/images/echiquier-verso-plaque-inox.webp" class="lazy" alt="Back of the chess set with engraved stainless steel plate — Thurnherr Art Marquetry" width="2000" height="1997"></div>
+        <div class="detail-gallery-slide"><img data-src="/assets/images/echiquier-plaque-inox-gravee.webp" class="lazy" alt="Brushed stainless steel plate engraved on the back of the chess set" width="2000" height="1051"></div>
+        <div class="detail-gallery-slide"><img data-src="/assets/images/echiquier-plaque-inox-gravee-detail.webp" class="lazy" alt="Detail of the engraved stainless steel plate" width="950" height="673"></div>
+      </div>
+      <button type="button" class="detail-gallery-nav detail-gallery-prev" data-gallery-prev aria-label="Previous photo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <button type="button" class="detail-gallery-nav detail-gallery-next" data-gallery-next aria-label="Next photo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      <div class="detail-gallery-dots" data-gallery-dots></div>
+    </div>
     <div class="detail-info" data-animate>
       <h2 class="detail-title">Porsche 917LH VS Porsche 917K — Ivory board</h2><hr class="detail-divider">
       <ul class="detail-desc"><li>1,020 pieces</li><li>13 wood species</li><li>51×51 cm</li><li>Open-pore satin lacquer</li></ul>
@@ -1179,7 +1272,17 @@
 <!-- ══════ DETAIL: Le Mans 70 Noir ══════ -->
 <section id="lemans70noir-section" class="section-hidden">
   <div class="detail-layout">
-    <div class="detail-img" data-animate><img data-src="/assets/images/image24.webp?v=1546ef1a" class="lazy" alt="Porsche 917LH VS Porsche 917K chess set, black board" width="2000" height="1998"></div>
+    <div class="detail-gallery" data-animate data-gallery role="region" aria-roledescription="carousel" aria-label="Artwork photos">
+      <div class="detail-gallery-track">
+        <div class="detail-gallery-slide"><img data-src="/assets/images/image24.webp?v=1546ef1a" class="lazy" alt="Porsche 917LH VS Porsche 917K chess set, black board" width="2000" height="1998"></div>
+        <div class="detail-gallery-slide"><img data-src="/assets/images/echiquier-verso-plaque-inox.webp" class="lazy" alt="Back of the chess set with engraved stainless steel plate — Thurnherr Art Marquetry" width="2000" height="1997"></div>
+        <div class="detail-gallery-slide"><img data-src="/assets/images/echiquier-plaque-inox-gravee.webp" class="lazy" alt="Brushed stainless steel plate engraved on the back of the chess set" width="2000" height="1051"></div>
+        <div class="detail-gallery-slide"><img data-src="/assets/images/echiquier-plaque-inox-gravee-detail.webp" class="lazy" alt="Detail of the engraved stainless steel plate" width="950" height="673"></div>
+      </div>
+      <button type="button" class="detail-gallery-nav detail-gallery-prev" data-gallery-prev aria-label="Previous photo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <button type="button" class="detail-gallery-nav detail-gallery-next" data-gallery-next aria-label="Next photo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      <div class="detail-gallery-dots" data-gallery-dots></div>
+    </div>
     <div class="detail-info" data-animate>
       <h2 class="detail-title">Porsche 917LH VS Porsche 917K — Black board</h2><hr class="detail-divider">
       <ul class="detail-desc"><li>1,020 pieces</li><li>13 wood species</li><li>51×51 cm</li><li>Open-pore satin lacquer</li></ul>
@@ -1818,6 +1921,57 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="/shop.js?v=a67b3c48a3"></script>
+<script>
+(function () {
+  document.querySelectorAll('[data-gallery]').forEach(function (gallery) {
+    var track = gallery.querySelector('.detail-gallery-track');
+    var slides = Array.prototype.slice.call(gallery.querySelectorAll('.detail-gallery-slide'));
+    var dotsWrap = gallery.querySelector('[data-gallery-dots]');
+    var prevBtn = gallery.querySelector('[data-gallery-prev]');
+    var nextBtn = gallery.querySelector('[data-gallery-next]');
+    var index = 0;
+
+    if (slides.length <= 1) {
+      gallery.classList.add('is-single');
+      return;
+    }
+
+    var dots = slides.map(function (_, i) {
+      var dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'detail-gallery-dot' + (i === 0 ? ' is-active' : '');
+      dot.setAttribute('aria-label', 'Photo ' + (i + 1) + ' / ' + slides.length);
+      dot.addEventListener('click', function () { goTo(i); });
+      dotsWrap.appendChild(dot);
+      return dot;
+    });
+
+    function goTo(i) {
+      index = (i + slides.length) % slides.length;
+      track.style.transform = 'translateX(-' + (index * 100) + '%)';
+      dots.forEach(function (dot, di) { dot.classList.toggle('is-active', di === index); });
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { goTo(index - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { goTo(index + 1); });
+
+    gallery.setAttribute('tabindex', '0');
+    gallery.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') goTo(index - 1);
+      if (e.key === 'ArrowRight') goTo(index + 1);
+    });
+
+    var touchStartX = null;
+    gallery.addEventListener('touchstart', function (e) { touchStartX = e.touches[0].clientX; }, { passive: true });
+    gallery.addEventListener('touchend', function (e) {
+      if (touchStartX === null) return;
+      var dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 40) goTo(dx < 0 ? index + 1 : index - 1);
+      touchStartX = null;
+    }, { passive: true });
+  });
+})();
+</script>
 <script>
 (function () {
   var GAP = 16;
