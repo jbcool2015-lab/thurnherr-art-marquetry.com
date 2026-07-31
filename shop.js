@@ -105,6 +105,73 @@
     "assets/images/gallery58/8d19a300.webp",
   ];
 
+  // Vignettes légères pour la grille catalogue (générées par
+  // generate_catalog_thumbs.py), distinctes des fichiers pleine résolution
+  // utilisés sur les fiches détail. Clé = chemin de la fiche détail (sans
+  // domaine ni query string) ; valeur = chemin de la vignette + ?v=hash.
+  // __CATALOG_THUMBS_START__
+  const CATALOG_THUMBS = {
+    "assets/Aventador Miami Book.webp": "assets/Aventador Miami Book-thumb.webp?v=d3991f94fa",
+    "assets/Ferrari F12 Steve USA.  Marquetry no varnish N\u00b04.webp": "assets/Ferrari F12 Steve USA.  Marquetry no varnish N\u00b04-thumb.webp?v=cc1a950fb7",
+    "assets/MA-230221191642-6874.webp": "assets/MA-230221191642-6874-thumb.webp?v=9588f3c489",
+    "assets/PEUGEOT-208-01 _3.webp": "assets/PEUGEOT-208-01 _3-thumb.webp?v=73bac48da1",
+    "assets/Porsche 911 GT3 RS 78X58CM.webp": "assets/Porsche 911 GT3 RS 78X58CM-thumb.webp?v=57be75946b",
+    "assets/Troph\u00e9e Book.webp": "assets/Troph\u00e9e Book-thumb.webp?v=080802a02d",
+    "assets/d.webp": "assets/d-thumb.webp?v=0d89010c81",
+    "assets/images/Ferrari_Monaco_bureau_sans_logo.webp": "assets/images/Ferrari_Monaco_bureau_sans_logo-thumb.webp?v=150eec613c",
+    "assets/images/Lamborghini_marquetry_salon_sans_logo_2.webp": "assets/images/Lamborghini_marquetry_salon_sans_logo_2-thumb.webp?v=831cad6e0e",
+    "assets/images/RedBull_RB8_salon_sans_logo_1.webp": "assets/images/RedBull_RB8_salon_sans_logo_1-thumb.webp?v=94d210946c",
+    "assets/images/armoiries-princieres-monaco.webp": "assets/images/armoiries-princieres-monaco-thumb.webp?v=bff46a7460",
+    "assets/images/bugatti-type55-roadster-1932.webp": "assets/images/bugatti-type55-roadster-1932-thumb.webp?v=07b7d7fecd",
+    "assets/images/bugatti-vision-gt-detail.webp": "assets/images/bugatti-vision-gt-detail-thumb.webp?v=b31e20393b",
+    "assets/images/echiquier-plaque-inox-gravee-detail.webp": "assets/images/echiquier-plaque-inox-gravee-detail-thumb.webp?v=de534b14af",
+    "assets/images/echiquier-plaque-inox-gravee.webp": "assets/images/echiquier-plaque-inox-gravee-thumb.webp?v=11e2f99bd2",
+    "assets/images/echiquier-verso-plaque-inox.webp": "assets/images/echiquier-verso-plaque-inox-thumb.webp?v=58ae0e091a",
+    "assets/images/ferrari-f12-berlinetta-brillant.webp": "assets/images/ferrari-f12-berlinetta-brillant-thumb.webp?v=c76068a812",
+    "assets/images/ferrari-f12-berlinetta-satine-2.webp": "assets/images/ferrari-f12-berlinetta-satine-2-thumb.webp?v=34460c111a",
+    "assets/images/ferrari-f12-berlinetta-satine-rouge.webp": "assets/images/ferrari-f12-berlinetta-satine-rouge-thumb.webp?v=ad3066d235",
+    "assets/images/gallery55/41c949da.webp": "assets/images/gallery55/41c949da-thumb.webp?v=49c5a94ec1",
+    "assets/images/gallery55/c184f4ad.webp": "assets/images/gallery55/c184f4ad-thumb.webp?v=46200f734c",
+    "assets/images/gallery55/f673b1d2.webp": "assets/images/gallery55/f673b1d2-thumb.webp?v=db804171e2",
+    "assets/images/gallery56/45e58e1d.webp": "assets/images/gallery56/45e58e1d-thumb.webp?v=d176e0869b",
+    "assets/images/gallery56/d26ad77f.webp": "assets/images/gallery56/d26ad77f-thumb.webp?v=fb87dde9ba",
+    "assets/images/gallery57/81cc2283.webp": "assets/images/gallery57/81cc2283-thumb.webp?v=0e1b8df146",
+    "assets/images/gallery58/2a8e719d.webp": "assets/images/gallery58/2a8e719d-thumb.webp?v=bfa4f7e58c",
+    "assets/images/gallery58/3f73f3d0.webp": "assets/images/gallery58/3f73f3d0-thumb.webp?v=236d75ba87",
+    "assets/images/image02.webp": "assets/images/image02-thumb.webp?v=3b35627746",
+    "assets/images/image07.webp": "assets/images/image07-thumb.webp?v=90d456825b",
+    "assets/images/image11.webp": "assets/images/image11-thumb.webp?v=fb71bda595",
+    "assets/images/image12.webp": "assets/images/image12-thumb.webp?v=aa8ef0d995",
+    "assets/images/image14.webp": "assets/images/image14-thumb.webp?v=1ab6fa1d09",
+    "assets/images/image15.webp": "assets/images/image15-thumb.webp?v=8c280bbe56",
+    "assets/images/image16.webp": "assets/images/image16-thumb.webp?v=62b938ea23",
+    "assets/images/image17.webp": "assets/images/image17-thumb.webp?v=9917e8510e",
+    "assets/images/image19.webp": "assets/images/image19-thumb.webp?v=df04a8e44f",
+    "assets/images/image20.webp": "assets/images/image20-thumb.webp?v=925d1f9e11",
+    "assets/images/image21.webp": "assets/images/image21-thumb.webp?v=111faf1f6d",
+    "assets/images/image22.webp": "assets/images/image22-thumb.webp?v=df0d46a370",
+    "assets/images/image23.webp": "assets/images/image23-thumb.webp?v=b8f460e7df",
+    "assets/images/image24.webp": "assets/images/image24-thumb.webp?v=9316a9aff0",
+    "assets/images/image26.webp": "assets/images/image26-thumb.webp?v=9434352f6e",
+    "assets/images/image27.webp": "assets/images/image27-thumb.webp?v=b481a88335",
+    "assets/images/image28.webp": "assets/images/image28-thumb.webp?v=cffb2c5ea8",
+    "assets/images/image31.webp": "assets/images/image31-thumb.webp?v=c1d46a39b2",
+    "assets/images/image32.webp": "assets/images/image32-thumb.webp?v=5a5ba24b69",
+    "assets/images/image35.webp": "assets/images/image35-thumb.webp?v=5c2372656c",
+    "assets/images/jaguar-xkr-vernis-brillant-80x40cm.webp": "assets/images/jaguar-xkr-vernis-brillant-80x40cm-thumb.webp?v=edd135ff83",
+    "assets/images/pur-sang-arabe-111x87cm.webp": "assets/images/pur-sang-arabe-111x87cm-thumb.webp?v=47757ce329",
+  };
+// __CATALOG_THUMBS_END__
+
+  function thumbSrc(src) {
+    if (!src) return src;
+    const isAbsolute = src.charAt(0) === "/";
+    const clean = (isAbsolute ? src.slice(1) : src).split("?")[0];
+    const thumb = CATALOG_THUMBS[clean];
+    if (!thumb) return src;
+    return isAbsolute ? "/" + thumb : thumb;
+  }
+
   const state = {
     category: "all",
     products: [],
@@ -381,7 +448,8 @@
   function cardGalleryMedia(product) {
     const slides = product.gallery
       .map((src, i) => {
-        const attr = i === 0 ? `src="${src}"` : `data-src="${src}"`;
+        const thumb = thumbSrc(src);
+        const attr = i === 0 ? `src="${thumb}"` : `data-src="${thumb}"`;
         return `<div class="detail-gallery-slide"><img ${attr} alt="${product.title}" loading="lazy"></div>`;
       })
       .join("");
@@ -491,11 +559,11 @@
         const productLabel = categoryLabel ? `${categoryLabel} · ${T.uniquePiece}` : T.uniquePiece;
         const media = isDiptych
           ? `<div class="shop-media" style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
-              ${product.images.map((src) => `<img src="${src}" alt="${product.title}" loading="lazy" style="aspect-ratio:1;width:100%;object-fit:cover;padding:0.6rem">`).join("")}
+              ${product.images.map((src) => `<img src="${thumbSrc(src)}" alt="${product.title}" loading="lazy" style="aspect-ratio:1;width:100%;object-fit:cover;padding:0.6rem">`).join("")}
             </div>`
           : hasGallery
           ? cardGalleryMedia(product)
-          : `<div class="shop-media"><img src="${product.image}" alt="${product.title}" loading="lazy"></div>`;
+          : `<div class="shop-media"><img src="${thumbSrc(product.image)}" alt="${product.title}" loading="lazy"></div>`;
         return `
           <article class="shop-card${isDiptych ? " is-featured" : ""}" style="cursor:pointer" onclick="location.href='${product.url}'">
             ${media}
