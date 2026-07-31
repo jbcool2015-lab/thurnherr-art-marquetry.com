@@ -246,6 +246,43 @@
   transform: scale(1.04);
 }
 
+/* ── Galerie multi-photos de la vignette (réutilise .detail-gallery,
+   défini dans site-tweaks.css) : mêmes classes, taille réduite ── */
+.shop-media .detail-gallery,
+.shop-media .detail-gallery-track,
+.shop-media .detail-gallery-slide {
+  height: 100%;
+  width: 100%;
+}
+
+.shop-media .detail-gallery-nav {
+  height: 2rem;
+  width: 2rem;
+}
+
+.shop-media .detail-gallery-nav svg {
+  height: 14px;
+  width: 14px;
+}
+
+.shop-media .detail-gallery-prev { left: 0.5rem; }
+.shop-media .detail-gallery-next { right: 0.5rem; }
+
+.shop-media .detail-gallery-dots { bottom: 0.6rem; }
+
+.shop-media .detail-gallery-dot {
+  height: 0.4rem;
+  width: 0.4rem;
+}
+
+@media (max-width: 640px) {
+  .shop-media .detail-gallery-nav {
+    height: 1.8rem;
+    opacity: 1;
+    width: 1.8rem;
+  }
+}
+
 /* ── Card body ── */
 .shop-card-body {
   display: flex;

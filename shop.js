@@ -23,6 +23,9 @@
       acquireCta: "Faire une offre d'acquisition",
       guarantees: ["Certificat d'authenticité inclus", "Livraison assurée et sécurisée"],
       viewAcquireCta: "Voir & Acquérir",
+      galleryPrev: "Photo précédente",
+      galleryNext: "Photo suivante",
+      galleryDot: (n, total) => `Photo ${n} / ${total}`,
     },
     en: {
       categories: {
@@ -45,6 +48,9 @@
       acquireCta: "Make an acquisition offer",
       guarantees: ["Certificate of authenticity included", "Insured, secure delivery"],
       viewAcquireCta: "View & Acquire",
+      galleryPrev: "Previous photo",
+      galleryNext: "Next photo",
+      galleryDot: (n, total) => `Photo ${n} / ${total}`,
     },
   };
 
@@ -286,14 +292,18 @@
       const details = sectionDetails.get(slug);
       if (!details?.image) return;
 
+      const isDiptychSlug = DIPTYCH_SLUGS.has(slug);
+      const sectionImages = isDiptychSlug ? null : getSectionImages(section, products.length);
+
       seen.add(slug);
       products.push({
         availability: getAvailability(slug, details.title, details.description),
         category: productCategory(slug, details.title, details.description),
         description: details.description || T.defaultDescription,
+        gallery: sectionImages && sectionImages.length > 1 ? sectionImages : null,
         id: slug,
         image: details.image,
-        images: DIPTYCH_SLUGS.has(slug) ? getSectionImages(section, products.length) : null,
+        images: isDiptychSlug ? getSectionImages(section, products.length) : null,
         price: PRICES.get(slug) || 0,
         title: details.title,
         url: `#${slug}`,
@@ -365,6 +375,102 @@
     cards.forEach((card) => observer.observe(card));
   }
 
+  // Vignette catalogue à plusieurs photos : seule la 1ère est chargée
+  // d'emblée (data-src pour les suivantes, chargées à la demande au 1er
+  // changement de photo) pour ne pas alourdir le chargement de la grille.
+  function cardGalleryMedia(product) {
+    const slides = product.gallery
+      .map((src, i) => {
+        const attr = i === 0 ? `src="${src}"` : `data-src="${src}"`;
+        return `<div class="detail-gallery-slide"><img ${attr} alt="${product.title}" loading="lazy"></div>`;
+      })
+      .join("");
+
+    return `
+      <div class="shop-media">
+        <div class="detail-gallery detail-gallery--card" data-card-gallery>
+          <div class="detail-gallery-track">${slides}</div>
+          <button type="button" class="detail-gallery-nav detail-gallery-prev" data-gallery-prev aria-label="${T.galleryPrev}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+          <button type="button" class="detail-gallery-nav detail-gallery-next" data-gallery-next aria-label="${T.galleryNext}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+          <div class="detail-gallery-dots" data-gallery-dots></div>
+        </div>
+      </div>`;
+  }
+
+  function initCardGalleries(root) {
+    root.querySelectorAll("[data-card-gallery]").forEach((gallery) => {
+      const track = gallery.querySelector(".detail-gallery-track");
+      const slides = Array.prototype.slice.call(gallery.querySelectorAll(".detail-gallery-slide"));
+      const dotsWrap = gallery.querySelector("[data-gallery-dots]");
+      const prevBtn = gallery.querySelector("[data-gallery-prev]");
+      const nextBtn = gallery.querySelector("[data-gallery-next]");
+      let index = 0;
+
+      const dots = slides.map((_slide, i) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "detail-gallery-dot" + (i === 0 ? " is-active" : "");
+        dot.setAttribute("aria-label", T.galleryDot(i + 1, slides.length));
+        dot.addEventListener("click", (event) => {
+          event.stopPropagation();
+          goTo(i);
+        });
+        dotsWrap.appendChild(dot);
+        return dot;
+      });
+
+      function goTo(i) {
+        index = (i + slides.length) % slides.length;
+        const img = slides[index].querySelector("img");
+        if (img && img.dataset.src && !img.src) img.src = img.dataset.src;
+        track.style.transform = `translateX(-${index * 100}%)`;
+        dots.forEach((dot, di) => dot.classList.toggle("is-active", di === index));
+      }
+
+      if (prevBtn) {
+        prevBtn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          goTo(index - 1);
+        });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          goTo(index + 1);
+        });
+      }
+
+      // Glisser change de photo sans ouvrir la fiche œuvre (la carte entière
+      // navigue au clic simple) : on avale le clic de synthèse qui suit un swipe.
+      let touchStartX = null;
+      let didSwipe = false;
+      gallery.addEventListener("touchstart", (event) => {
+        touchStartX = event.touches[0].clientX;
+        didSwipe = false;
+      }, { passive: true });
+      gallery.addEventListener("touchmove", (event) => {
+        if (touchStartX === null) return;
+        if (Math.abs(event.touches[0].clientX - touchStartX) > 10) didSwipe = true;
+      }, { passive: true });
+      gallery.addEventListener("touchend", (event) => {
+        if (touchStartX === null) return;
+        const dx = event.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 40) {
+          goTo(dx < 0 ? index + 1 : index - 1);
+          didSwipe = true;
+        }
+        touchStartX = null;
+      }, { passive: true });
+      gallery.addEventListener("click", (event) => {
+        if (didSwipe) {
+          event.preventDefault();
+          event.stopPropagation();
+          didSwipe = false;
+        }
+      });
+    });
+  }
+
   function renderProducts() {
     const grid = document.querySelector("[data-shop-grid]");
     if (!grid) return;
@@ -380,12 +486,15 @@
     grid.innerHTML = products
       .map((product, index) => {
         const isDiptych = product.images && product.images.length > 1;
+        const hasGallery = !isDiptych && product.gallery && product.gallery.length > 1;
         const categoryLabel = categories.find((category) => category.id === product.category)?.label;
         const productLabel = categoryLabel ? `${categoryLabel} · ${T.uniquePiece}` : T.uniquePiece;
         const media = isDiptych
           ? `<div class="shop-media" style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
               ${product.images.map((src) => `<img src="${src}" alt="${product.title}" loading="lazy" style="aspect-ratio:1;width:100%;object-fit:cover;padding:0.6rem">`).join("")}
             </div>`
+          : hasGallery
+          ? cardGalleryMedia(product)
           : `<div class="shop-media"><img src="${product.image}" alt="${product.title}" loading="lazy"></div>`;
         return `
           <article class="shop-card${isDiptych ? " is-featured" : ""}" style="cursor:pointer" onclick="location.href='${product.url}'">
@@ -404,6 +513,7 @@
       })
       .join("");
 
+    initCardGalleries(grid);
     revealCards();
   }
 
