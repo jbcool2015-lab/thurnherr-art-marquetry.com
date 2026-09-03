@@ -1108,7 +1108,7 @@ section {
 
 .cert-modal-panel {
   max-height: 90vh;
-  max-width: min(94vw, 900px);
+  max-width: min(94vw, 1100px);
   position: relative;
 }
 
@@ -1140,6 +1140,44 @@ section {
   background: var(--lux-gold);
   color: var(--lux-black);
 }
+
+.cert-modal-cols {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.cert-modal-col {
+  flex: 1;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cert-modal-col img {
+  border-radius: 2px;
+  box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.6);
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+.cert-modal-col figcaption {
+  margin-top: 0.75rem;
+  color: rgba(240, 233, 220, 0.75);
+  font-size: 0.78rem;
+  text-align: center;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .cert-modal-cols {
+    flex-direction: column;
+  }
+}
+
 
 /* ══════════════════════════════════════════════════════════════
    GALERIE MULTI-PHOTOS — fiche œuvre (carrousel)
