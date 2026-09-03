@@ -26,6 +26,8 @@
       galleryPrev: "Photo précédente",
       galleryNext: "Photo suivante",
       galleryDot: (n, total) => `Photo ${n} / ${total}`,
+      orderSuccess: "📬 Demande de commande envoyée — merci, Christophe vous recontactera rapidement pour finaliser votre commande. N'oubliez pas de consulter votre boîte mail.",
+      orderMessage: (title, zone, payment, address) => `Commande de reproduction — ${title}\n\nZone de livraison : ${zone}\nMode de paiement : ${payment}\nAdresse de livraison :\n${address}`,
     },
     en: {
       categories: {
@@ -51,6 +53,8 @@
       galleryPrev: "Previous photo",
       galleryNext: "Next photo",
       galleryDot: (n, total) => `Photo ${n} / ${total}`,
+      orderSuccess: "📬 Order request sent — thank you, Christophe will get back to you shortly to finalize your order. Don't forget to check your inbox.",
+      orderMessage: (title, zone, payment, address) => `Reproduction order — ${title}\n\nDelivery zone: ${zone}\nPayment method: ${payment}\nDelivery address:\n${address}`,
     },
   };
 
@@ -742,6 +746,99 @@
     });
   }
 
+  function openReproductionOrder(title) {
+    const modal = document.querySelector('[data-order-modal]');
+    if (!modal) return;
+    const form = modal.querySelector('#order-form');
+    form?.reset();
+    const display = modal.querySelector('[data-order-title-display]');
+    if (display) display.textContent = title;
+    const titleInput = form?.querySelector('[data-order-title-input]');
+    if (titleInput) titleInput.value = title;
+    const status = modal.querySelector('[data-order-status]');
+    if (status) { status.textContent = ""; status.classList.remove("is-success", "is-error"); }
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    requestAnimationFrame(() => form?.querySelector('[name="name"]')?.focus());
+  }
+  window.openReproductionOrder = openReproductionOrder;
+
+  function closeOrderModal() {
+    const modal = document.querySelector('[data-order-modal]');
+    if (!modal) return;
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  function initOrderModal() {
+    const modal = document.querySelector('[data-order-modal]');
+    if (!modal) return;
+
+    document.addEventListener("click", (event) => {
+      const trigger = event.target.closest("[data-order-title]");
+      if (trigger) openReproductionOrder(trigger.getAttribute("data-order-title"));
+    });
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal || event.target.closest("[data-order-close]")) closeOrderModal();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("is-open")) closeOrderModal();
+    });
+
+    const form = modal.querySelector("#order-form");
+    if (!form) return;
+    const status = form.querySelector("[data-order-status]");
+    const button = form.querySelector('button[type="submit"]');
+    const defaultButtonText = button ? button.textContent : "";
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!status) return;
+
+      if (typeof emailjs === "undefined") {
+        status.textContent = T.contactError;
+        status.classList.remove("is-success");
+        status.classList.add("is-error");
+        return;
+      }
+
+      const title = form.querySelector("[data-order-title-input]")?.value || "";
+      const zone = form.querySelector('input[name="zone"]:checked')?.value || "";
+      const payment = form.querySelector('input[name="payment"]:checked')?.value || "";
+      const address = form.querySelector('[name="address"]')?.value || "";
+
+      const params = {
+        from_name: form.querySelector('[name="name"]')?.value || "",
+        from_email: form.querySelector('[name="email"]')?.value || "",
+        phone: form.querySelector('[name="phone"]')?.value || "",
+        message: T.orderMessage(title, zone, payment, address),
+      };
+
+      status.classList.remove("is-success", "is-error");
+      status.textContent = T.contactSending;
+      if (button) { button.disabled = true; button.textContent = T.contactSending; }
+
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
+        .then(() => {
+          status.textContent = T.orderSuccess;
+          status.classList.add("is-success");
+          form.reset();
+          closeOrderModal();
+        })
+        .catch(() => {
+          status.textContent = T.contactError;
+          status.classList.add("is-error");
+        })
+        .finally(() => {
+          if (button) { button.disabled = false; button.textContent = defaultButtonText; }
+        });
+    });
+  }
+
   function hydrateDeferredImages() {
     document.querySelectorAll("img[data-src]").forEach((image) => {
       const realSource = image.getAttribute("data-src");
@@ -754,6 +851,7 @@
   function init() {
     initShop();
     initContactForm();
+    initOrderModal();
   }
 
   if (document.readyState === "loading") {
