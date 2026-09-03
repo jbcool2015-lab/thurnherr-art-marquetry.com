@@ -519,9 +519,9 @@
   color: var(--shop-muted);
   cursor: pointer;
   font: 1rem Alata, Arial, sans-serif;
-  height: 2.4rem;
+  height: 2.75rem;
   transition: all 0.3s ease;
-  width: 2.4rem;
+  width: 2.75rem;
 }
 
 .shop-close:hover {
@@ -672,9 +672,12 @@
   }
 
   .shop-grid,
-  .shop-actions,
   .checkout-form {
     grid-template-columns: 1fr;
+  }
+
+  .shop-actions {
+    flex-direction: column;
   }
 
   .cart-line {

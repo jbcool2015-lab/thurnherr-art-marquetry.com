@@ -27,6 +27,7 @@
       galleryNext: "Photo suivante",
       galleryDot: (n, total) => `Photo ${n} / ${total}`,
       orderSuccess: "📬 Demande de commande envoyée — merci, Christophe vous recontactera rapidement pour finaliser votre commande. N'oubliez pas de consulter votre boîte mail.",
+      orderThrottled: "Merci de patienter quelques secondes avant de renvoyer votre demande.",
       orderMessage: (title, zone, payment, address) => `Commande de reproduction — ${title}\n\nZone de livraison : ${zone}\nMode de paiement : ${payment}\nAdresse de livraison :\n${address}`,
     },
     en: {
@@ -54,6 +55,7 @@
       galleryNext: "Next photo",
       galleryDot: (n, total) => `Photo ${n} / ${total}`,
       orderSuccess: "📬 Order request sent — thank you, Christophe will get back to you shortly to finalize your order. Don't forget to check your inbox.",
+      orderThrottled: "Please wait a few seconds before sending your request again.",
       orderMessage: (title, zone, payment, address) => `Reproduction order — ${title}\n\nDelivery zone: ${zone}\nPayment method: ${payment}\nDelivery address:\n${address}`,
     },
   };
@@ -772,6 +774,28 @@
     document.body.style.overflow = "";
   }
 
+  // Piège de focus : Tab/Shift+Tab restent dans le panneau tant que la
+  // modale de commande est ouverte (le rôle dialog/aria-modal ne suffit
+  // pas à lui seul à empêcher le focus clavier de sortir du panneau).
+  function trapFocus(modal, event) {
+    if (event.key !== "Tab" || !modal.classList.contains("is-open")) return;
+    const panel = modal.querySelector(".shop-panel");
+    if (!panel) return;
+    const focusable = Array.prototype.slice
+      .call(panel.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'))
+      .filter((el) => !el.disabled && el.offsetParent !== null);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
   function initOrderModal() {
     const modal = document.querySelector('[data-order-modal]');
     if (!modal) return;
@@ -786,7 +810,9 @@
     });
 
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && modal.classList.contains("is-open")) closeOrderModal();
+      if (!modal.classList.contains("is-open")) return;
+      if (event.key === "Escape") closeOrderModal();
+      trapFocus(modal, event);
     });
 
     const form = modal.querySelector("#order-form");
@@ -822,15 +848,20 @@
       status.textContent = T.contactSending;
       if (button) { button.disabled = true; button.textContent = T.contactSending; }
 
-      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
+      // Throttle EmailJS dédié ("order-form") : évite que l'envoi d'une
+      // commande soit bloqué par le throttle du formulaire de contact
+      // ("contact-form") si les deux sont utilisés à moins de 10s d'écart.
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params, {
+        limitRate: { id: "order-form", throttle: 10000 },
+      })
         .then(() => {
           status.textContent = T.orderSuccess;
           status.classList.add("is-success");
           form.reset();
-          closeOrderModal();
+          setTimeout(closeOrderModal, 4000);
         })
-        .catch(() => {
-          status.textContent = T.contactError;
+        .catch((error) => {
+          status.textContent = error?.status === 429 ? T.orderThrottled : T.contactError;
           status.classList.add("is-error");
         })
         .finally(() => {
