@@ -183,8 +183,8 @@
 
 /* ── Product card ── */
 .shop-card {
-  background: #ffffff;
-  border: 1px solid rgba(201, 169, 110, 0.28);
+  background: var(--shop-ink);
+  border: 1px solid rgba(201, 169, 110, 0.08);
   display: flex;
   flex-direction: column;
   min-height: 100%;
@@ -300,7 +300,7 @@
 }
 
 .shop-card h3 {
-  color: #1a1410;
+  color: var(--shop-ivory);
   font-family: "DM Serif Text", Georgia, serif;
   font-size: clamp(1.05rem, 1.4vw, 1.3rem);
   font-weight: 400;
@@ -310,7 +310,7 @@
 }
 
 .shop-meta {
-  color: rgba(40, 30, 20, 0.6);
+  color: var(--shop-muted);
   font-size: 0.84rem;
   line-height: 1.6;
   max-height: 4.2rem;
