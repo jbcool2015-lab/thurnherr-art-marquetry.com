@@ -1546,8 +1546,19 @@ section {
 }
 
 .repro-fiche-specs li::before {
-  content: "— ";
-  color: #c9a96e;
+  display: none;
+}
+
+.repro-fiche-specs li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.repro-fiche-specs li svg {
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .repro-fiche-panel .shop-button {

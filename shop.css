@@ -767,3 +767,39 @@
     justify-self: start;
   }
 }
+
+/* === Panneau commande : fond clair === */
+[data-order-modal] .shop-panel {
+  background: #f7f4ef !important;
+  color: #1a1410 !important;
+}
+[data-order-modal] .shop-panel h2,
+[data-order-modal] .shop-panel h3 {
+  background: none !important;
+  -webkit-text-fill-color: #1a1410 !important;
+  color: #1a1410 !important;
+}
+[data-order-modal] .order-form label,
+[data-order-modal] .order-radio {
+  color: #1a1410 !important;
+}
+[data-order-modal] input,
+[data-order-modal] select,
+[data-order-modal] textarea {
+  background: #ffffff !important;
+  border: 1px solid #c9b99a !important;
+  color: #1a1410 !important;
+}
+[data-order-modal] input::placeholder,
+[data-order-modal] textarea::placeholder {
+  color: #9a8f82 !important;
+}
+[data-order-modal] .shop-close {
+  color: #1a1410 !important;
+  border-color: #c9b99a !important;
+}
+[data-order-modal] .order-summary {
+  background: #ede8e0 !important;
+  color: #1a1410 !important;
+  border-color: #c9b99a !important;
+}
