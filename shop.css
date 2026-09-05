@@ -789,14 +789,13 @@
   -webkit-text-fill-color: #1a1410 !important;
   color: #1a1410 !important;
 }
-[data-order-modal] .order-form label,
-[data-order-modal] .order-radio {
+[data-order-modal] .order-form label {
   color: #1a1410 !important;
 }
 [data-order-modal] input,
 [data-order-modal] select,
 [data-order-modal] textarea {
-  background: #ffffff !important;
+  background-color: #ffffff !important;
   border: 1px solid #c9b99a !important;
   color: #1a1410 !important;
 }
@@ -812,4 +811,30 @@
   background: #ede8e0 !important;
   color: #1a1410 !important;
   border-color: #c9b99a !important;
+}
+
+/* === Select mode de paiement (PayPal / Virement) ===
+   Ciblé par #order-payment en plus de .order-select : la règle générique
+   .order-form select (site-tweaks.css) partage la même spécificité et
+   sinon écraserait la flèche/le padding personnalisés ci-dessous. */
+#order-payment.order-select {
+  width: 100%;
+  padding: 10px 14px;
+  background-color: #ffffff;
+  border: 1px solid #c9b99a;
+  border-radius: 4px;
+  color: #1a1410;
+  font-size: 0.95rem;
+  font-family: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c9a96e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  cursor: pointer;
+}
+#order-payment.order-select:focus {
+  outline: none;
+  border-color: #c9a96e;
+  box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.15);
 }

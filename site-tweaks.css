@@ -1188,6 +1188,12 @@ section {
   text-align: left;
 }
 
+/* display:flex ci-dessus prime sinon sur le [hidden] du navigateur :
+   sans cette règle, masquer le form via l'attribut hidden ne suffit pas. */
+.order-form[hidden] {
+  display: none;
+}
+
 .order-form input,
 .order-form select,
 .order-form textarea {
@@ -1587,44 +1593,6 @@ section {
   background: #b8935a;
   border-color: #b8935a;
   color: #0a0a0a;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   MODE DE PAIEMENT — options radio
-   ══════════════════════════════════════════════════════════════ */
-fieldset.order-field {
-  border: 0;
-  margin: 0;
-  padding: 0;
-}
-
-fieldset.order-field legend {
-  color: rgba(240, 233, 220, 0.85);
-  font-size: 0.78rem;
-  letter-spacing: 0.04rem;
-  padding: 0;
-  margin-bottom: 0.4rem;
-}
-
-.order-payment-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.2rem;
-}
-
-.order-radio {
-  align-items: center;
-  color: rgba(240, 233, 220, 0.85);
-  cursor: pointer;
-  display: flex;
-  font-size: 0.88rem;
-  gap: 0.5rem;
-}
-
-.order-radio input {
-  accent-color: #c9a96e;
-  height: 1.05rem;
-  width: 1.05rem;
 }
 
 /* ── Avertissement frais de livraison supplémentaires ── */

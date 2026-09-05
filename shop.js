@@ -28,9 +28,12 @@
       galleryDot: (n, total) => `Photo ${n} / ${total}`,
       orderSuccess: "📬 Demande de commande envoyée — merci, Christophe vous recontactera rapidement pour finaliser votre commande. N'oubliez pas de consulter votre boîte mail.",
       orderThrottled: "Merci de patienter quelques secondes avant de renvoyer votre demande.",
-      orderBankSuccess: "Votre demande a été transmise. Christophe vous contactera sous 24h avec ses coordonnées bancaires pour finaliser le paiement.",
-      paypalRedirect: "Redirection vers PayPal en cours... [CLIENT_PAYPAL_ID à configurer]",
       orderCaptchaMissing: "Merci de valider le captcha avant d'envoyer votre demande.",
+      orderPaymentMissing: "Merci de choisir un mode de paiement.",
+      paypalConfirmTitle: "Redirection PayPal",
+      paypalConfirmBody: "Une fenêtre PayPal s'est ouverte.<br>Une fois le paiement effectué, Christophe vous confirmera votre commande par email.",
+      bankConfirmTitle: "Demande reçue",
+      bankConfirmBody: "Christophe a bien reçu votre demande.<br>Consultez vos emails — il vous transmettra son RIB pour procéder au virement.<br><br>Votre commande sera confirmée dès réception du paiement.",
       orderMessage: (d) => `Commande de reproduction — ${d.title}\n\nPrénom : ${d.firstName}\nNom : ${d.lastName}\nEmail : ${d.email}\nTéléphone : ${d.phone}\nAdresse : ${d.street}, ${d.zip} ${d.city}, ${d.country}\nMode de paiement : Virement bancaire`,
     },
     en: {
@@ -59,9 +62,12 @@
       galleryDot: (n, total) => `Photo ${n} / ${total}`,
       orderSuccess: "📬 Order request sent — thank you, Christophe will get back to you shortly to finalize your order. Don't forget to check your inbox.",
       orderThrottled: "Please wait a few seconds before sending your request again.",
-      orderBankSuccess: "Your request has been sent. Christophe will contact you within 24h with his bank details to finalize payment.",
-      paypalRedirect: "Redirecting to PayPal... [CLIENT_PAYPAL_ID to configure]",
       orderCaptchaMissing: "Please validate the captcha before sending your request.",
+      orderPaymentMissing: "Please choose a payment method.",
+      paypalConfirmTitle: "Redirecting to PayPal",
+      paypalConfirmBody: "A PayPal window has opened.<br>Once payment is complete, Christophe will confirm your order by email.",
+      bankConfirmTitle: "Request received",
+      bankConfirmBody: "Christophe has received your request.<br>Check your inbox — he'll send his bank details to complete the transfer.<br><br>Your order will be confirmed once payment is received.",
       orderMessage: (d) => `Reproduction order — ${d.title}\n\nFirst name: ${d.firstName}\nLast name: ${d.lastName}\nEmail: ${d.email}\nPhone: ${d.phone}\nAddress: ${d.street}, ${d.zip} ${d.city}, ${d.country}\nPayment method: Bank transfer`,
     },
   };
@@ -759,6 +765,11 @@
     if (!modal) return;
     const form = modal.querySelector('#order-form');
     form?.reset();
+    // Réouverture après une commande précédente : on réaffiche le
+    // formulaire et on efface l'écran de confirmation encore en mémoire.
+    const confirmation = modal.querySelector('[data-order-confirmation]');
+    if (confirmation) { confirmation.hidden = true; confirmation.innerHTML = ""; }
+    if (form) form.hidden = false;
     const display = modal.querySelector('[data-order-title-display]');
     if (display) display.textContent = title;
     const titleInput = form?.querySelector('[data-order-title-input]');
@@ -848,7 +859,7 @@
       }
 
       const title = form.querySelector("[data-order-title-input]")?.value || "";
-      const payment = form.querySelector('input[name="payment"]:checked')?.value || "";
+      const payment = form.querySelector('[name="payment"]')?.value || "";
       const orderDetails = {
         title,
         firstName: form.querySelector('[name="firstName"]')?.value || "",
@@ -863,41 +874,24 @@
 
       status.classList.remove("is-success", "is-error");
 
-      if (payment === "PayPal") {
-        // CLIENT_PAYPAL_ID : insérer ici le vrai Client ID PayPal (obtenu
-        // sur https://developer.paypal.com/dashboard/) pour déclencher la
-        // véritable redirection vers le checkout PayPal.
-        status.textContent = T.paypalRedirect;
-        return;
-      }
-
-      if (typeof emailjs === "undefined") {
-        status.textContent = T.contactError;
+      if (!payment) {
         status.classList.add("is-error");
+        status.textContent = T.orderPaymentMissing;
         return;
       }
 
-      const params = {
-        from_name: `${orderDetails.firstName} ${orderDetails.lastName}`.trim(),
-        from_email: orderDetails.email,
-        phone: orderDetails.phone,
-        message: T.orderMessage(orderDetails),
-      };
+      if (payment === "paypal") {
+        window.open("https://www.paypal.me/marquetrycthurnherr", "_blank");
+        showOrderConfirmation(modal, "paypal");
+        return;
+      }
 
       status.textContent = T.contactSending;
       if (button) { button.disabled = true; button.textContent = T.contactSending; }
 
-      // Throttle EmailJS dédié ("order-form") : évite que l'envoi d'une
-      // commande soit bloqué par le throttle du formulaire de contact
-      // ("contact-form") si les deux sont utilisés à moins de 10s d'écart.
-      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params, {
-        limitRate: { id: "order-form", throttle: 10000 },
-      })
+      sendOrderEmailVirement(orderDetails)
         .then(() => {
-          status.textContent = T.orderBankSuccess;
-          status.classList.add("is-success");
-          form.reset();
-          setTimeout(closeOrderModal, 4000);
+          showOrderConfirmation(modal, "virement");
         })
         .catch((error) => {
           status.textContent = error?.status === 429 ? T.orderThrottled : T.contactError;
@@ -907,6 +901,44 @@
           if (button) { button.disabled = false; button.textContent = defaultButtonText; resetOrderCaptcha(); }
         });
     });
+  }
+
+  // Envoie la demande de virement bancaire via EmailJS (mêmes identifiants
+  // réels que le formulaire de contact, cf. EMAILJS_SERVICE_ID plus haut) —
+  // renvoie la promesse pour que l'appelant gère succès/erreur/throttle.
+  function sendOrderEmailVirement(orderDetails) {
+    if (typeof emailjs === "undefined") return Promise.reject(new Error("emailjs indisponible"));
+    const params = {
+      from_name: `${orderDetails.firstName} ${orderDetails.lastName}`.trim(),
+      from_email: orderDetails.email,
+      phone: orderDetails.phone,
+      message: T.orderMessage(orderDetails),
+    };
+    // Throttle EmailJS dédié ("order-form") : évite que l'envoi d'une
+    // commande soit bloqué par le throttle du formulaire de contact
+    // ("contact-form") si les deux sont utilisés à moins de 10s d'écart.
+    return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params, {
+      limitRate: { id: "order-form", throttle: 10000 },
+    });
+  }
+
+  // Remplace le formulaire par un écran de confirmation dans le corps
+  // scrollable du panneau. Le formulaire est masqué (pas détruit) : il
+  // réapparaît intact au prochain openReproductionOrder().
+  function showOrderConfirmation(modal, type) {
+    const form = modal.querySelector("#order-form");
+    const confirmation = modal.querySelector("[data-order-confirmation]");
+    if (!confirmation) return;
+    const title = type === "paypal" ? T.paypalConfirmTitle : T.bankConfirmTitle;
+    const body = type === "paypal" ? T.paypalConfirmBody : T.bankConfirmBody;
+    confirmation.innerHTML = `
+      <div style="text-align:center;padding:40px 20px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c9a96e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <h2 style="color:#1a1410;margin:16px 0 8px;">${title}</h2>
+        <p style="color:#5a4f46;line-height:1.6;">${body}</p>
+      </div>`;
+    if (form) form.hidden = true;
+    confirmation.hidden = false;
   }
 
   // ── Google reCAPTCHA v2 : callbacks globaux référencés par data-callback

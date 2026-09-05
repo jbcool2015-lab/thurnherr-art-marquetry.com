@@ -2162,14 +2162,15 @@
       </div>
       <p class="order-shipping-warning">⚠ Frais de livraison supplémentaires de 30 € pour les destinations : Moyen-Orient, Amérique du Sud, Asie du Sud-Est, Australie et Nouvelle-Zélande.</p>
 
-      <fieldset class="order-field">
-        <legend>Mode de paiement <span class="required-mark" aria-hidden="true">*</span></legend>
-        <div class="order-payment-options">
-          <label class="order-radio"><input type="radio" name="payment" value="PayPal" required> PayPal</label>
-          <label class="order-radio"><input type="radio" name="payment" value="Virement bancaire" required> Virement bancaire</label>
-        </div>
+      <div class="order-field">
+        <label for="order-payment" style="display:block;margin-bottom:8px;">Mode de paiement <span class="required-mark" aria-hidden="true">*</span></label>
+        <select id="order-payment" name="payment" required class="order-select">
+          <option value="">— Choisir —</option>
+          <option value="paypal">PayPal</option>
+          <option value="virement">Virement bancaire</option>
+        </select>
         <p class="field-error" data-error-for="payment" role="alert"></p>
-      </fieldset>
+      </div>
 
       <p class="order-note">Tirage numéroté et signé, expédition assurée. Christophe vous recontactera personnellement pour confirmer les modalités de règlement et le délai de livraison.</p>
 
@@ -2179,6 +2180,7 @@
       <button type="submit" disabled>Envoyer la demande</button>
       <div class="contact-status" data-order-status role="status" aria-live="polite"></div>
     </form>
+    <div class="shop-panel-body order-confirmation" data-order-confirmation hidden></div>
   </div>
 </div>
 
