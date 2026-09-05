@@ -550,11 +550,12 @@
   border-left: 1px solid rgba(201, 169, 110, 0.2);
   box-shadow: -2rem 0 5rem rgba(0, 0, 0, 0.5);
   color: var(--shop-ivory);
+  display: flex;
+  flex-direction: column;
   height: 100vh;
   margin-left: auto;
   max-width: 520px;
-  overflow: auto;
-  padding: clamp(1.2rem, 2.5vw, 1.8rem);
+  overflow: hidden;
   text-align: left;
   transform: translateX(100%);
   transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
@@ -565,13 +566,22 @@
   transform: translateX(0);
 }
 
+/* Header fixe du panneau : titre + bouton fermer restent visibles */
 .shop-panel-head {
   align-items: center;
   border-bottom: 1px solid var(--shop-line);
   display: flex;
+  flex-shrink: 0;
   justify-content: space-between;
-  margin-bottom: 1.2rem;
-  padding-bottom: 1.2rem;
+  padding: 16px 20px 12px;
+}
+
+/* Corps scrollable : seule cette zone défile si le contenu dépasse */
+.shop-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  scrollbar-width: thin;
 }
 
 .shop-panel h2 {
