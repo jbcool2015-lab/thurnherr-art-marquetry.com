@@ -28,7 +28,10 @@
       galleryDot: (n, total) => `Photo ${n} / ${total}`,
       orderSuccess: "📬 Demande de commande envoyée — merci, Christophe vous recontactera rapidement pour finaliser votre commande. N'oubliez pas de consulter votre boîte mail.",
       orderThrottled: "Merci de patienter quelques secondes avant de renvoyer votre demande.",
-      orderMessage: (title, zone, payment, address) => `Commande de reproduction — ${title}\n\nZone de livraison : ${zone}\nMode de paiement : ${payment}\nAdresse de livraison :\n${address}`,
+      orderBankSuccess: "Votre demande a été transmise. Christophe vous contactera sous 24h avec ses coordonnées bancaires pour finaliser le paiement.",
+      paypalRedirect: "Redirection vers PayPal en cours... [CLIENT_PAYPAL_ID à configurer]",
+      orderCaptchaMissing: "Merci de valider le captcha avant d'envoyer votre demande.",
+      orderMessage: (d) => `Commande de reproduction — ${d.title}\n\nPrénom : ${d.firstName}\nNom : ${d.lastName}\nEmail : ${d.email}\nTéléphone : ${d.phone}\nAdresse : ${d.street}, ${d.zip} ${d.city}, ${d.country}\nMode de paiement : Virement bancaire`,
     },
     en: {
       categories: {
@@ -56,7 +59,10 @@
       galleryDot: (n, total) => `Photo ${n} / ${total}`,
       orderSuccess: "📬 Order request sent — thank you, Christophe will get back to you shortly to finalize your order. Don't forget to check your inbox.",
       orderThrottled: "Please wait a few seconds before sending your request again.",
-      orderMessage: (title, zone, payment, address) => `Reproduction order — ${title}\n\nDelivery zone: ${zone}\nPayment method: ${payment}\nDelivery address:\n${address}`,
+      orderBankSuccess: "Your request has been sent. Christophe will contact you within 24h with his bank details to finalize payment.",
+      paypalRedirect: "Redirecting to PayPal... [CLIENT_PAYPAL_ID to configure]",
+      orderCaptchaMissing: "Please validate the captcha before sending your request.",
+      orderMessage: (d) => `Reproduction order — ${d.title}\n\nFirst name: ${d.firstName}\nLast name: ${d.lastName}\nEmail: ${d.email}\nPhone: ${d.phone}\nAddress: ${d.street}, ${d.zip} ${d.city}, ${d.country}\nPayment method: Bank transfer`,
     },
   };
 
@@ -759,10 +765,16 @@
     if (titleInput) titleInput.value = title;
     const status = modal.querySelector('[data-order-status]');
     if (status) { status.textContent = ""; status.classList.remove("is-success", "is-error"); }
+    // Le reCAPTCHA doit être revalidé à chaque ouverture : le bouton
+    // d'envoi reste désactivé tant que onOrderCaptchaVerified n'a pas
+    // été déclenché par le widget Google.
+    const button = form?.querySelector('button[type="submit"]');
+    if (button) button.disabled = true;
+    resetOrderCaptcha();
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
-    requestAnimationFrame(() => form?.querySelector('[name="name"]')?.focus());
+    requestAnimationFrame(() => form?.querySelector('[name="firstName"]')?.focus());
   }
   window.openReproductionOrder = openReproductionOrder;
 
@@ -825,26 +837,53 @@
       event.preventDefault();
       if (!status) return;
 
-      if (typeof emailjs === "undefined") {
-        status.textContent = T.contactError;
+      // Filet de sécurité : le bouton reste désactivé tant que le captcha
+      // n'est pas validé, mais un Entrée dans un champ texte peut tout de
+      // même déclencher la soumission du formulaire.
+      if (typeof grecaptcha === "undefined" || !grecaptcha.getResponse()) {
         status.classList.remove("is-success");
         status.classList.add("is-error");
+        status.textContent = T.orderCaptchaMissing;
         return;
       }
 
       const title = form.querySelector("[data-order-title-input]")?.value || "";
-      const zone = form.querySelector('input[name="zone"]:checked')?.value || "";
       const payment = form.querySelector('input[name="payment"]:checked')?.value || "";
-      const address = form.querySelector('[name="address"]')?.value || "";
-
-      const params = {
-        from_name: form.querySelector('[name="name"]')?.value || "",
-        from_email: form.querySelector('[name="email"]')?.value || "",
+      const orderDetails = {
+        title,
+        firstName: form.querySelector('[name="firstName"]')?.value || "",
+        lastName: form.querySelector('[name="lastName"]')?.value || "",
+        email: form.querySelector('[name="email"]')?.value || "",
         phone: form.querySelector('[name="phone"]')?.value || "",
-        message: T.orderMessage(title, zone, payment, address),
+        street: form.querySelector('[name="street"]')?.value || "",
+        city: form.querySelector('[name="city"]')?.value || "",
+        zip: form.querySelector('[name="zip"]')?.value || "",
+        country: form.querySelector('[name="country"]')?.value || "",
       };
 
       status.classList.remove("is-success", "is-error");
+
+      if (payment === "PayPal") {
+        // CLIENT_PAYPAL_ID : insérer ici le vrai Client ID PayPal (obtenu
+        // sur https://developer.paypal.com/dashboard/) pour déclencher la
+        // véritable redirection vers le checkout PayPal.
+        status.textContent = T.paypalRedirect;
+        return;
+      }
+
+      if (typeof emailjs === "undefined") {
+        status.textContent = T.contactError;
+        status.classList.add("is-error");
+        return;
+      }
+
+      const params = {
+        from_name: `${orderDetails.firstName} ${orderDetails.lastName}`.trim(),
+        from_email: orderDetails.email,
+        phone: orderDetails.phone,
+        message: T.orderMessage(orderDetails),
+      };
+
       status.textContent = T.contactSending;
       if (button) { button.disabled = true; button.textContent = T.contactSending; }
 
@@ -855,7 +894,7 @@
         limitRate: { id: "order-form", throttle: 10000 },
       })
         .then(() => {
-          status.textContent = T.orderSuccess;
+          status.textContent = T.orderBankSuccess;
           status.classList.add("is-success");
           form.reset();
           setTimeout(closeOrderModal, 4000);
@@ -865,8 +904,86 @@
           status.classList.add("is-error");
         })
         .finally(() => {
-          if (button) { button.disabled = false; button.textContent = defaultButtonText; }
+          if (button) { button.disabled = false; button.textContent = defaultButtonText; resetOrderCaptcha(); }
         });
+    });
+  }
+
+  // ── Google reCAPTCHA v2 : callbacks globaux référencés par data-callback
+  // / data-expired-callback sur le widget .g-recaptcha du formulaire de
+  // commande. Le bouton "Envoyer la demande" reste désactivé tant que
+  // onOrderCaptchaVerified n'a pas été déclenché.
+  function resetOrderCaptcha() {
+    if (typeof grecaptcha !== "undefined" && grecaptcha.reset) {
+      try { grecaptcha.reset(); } catch (_error) { /* widget pas encore rendu */ }
+    }
+  }
+
+  window.onOrderCaptchaVerified = function () {
+    const button = document.querySelector('#order-form button[type="submit"]');
+    if (button) button.disabled = false;
+  };
+
+  window.onOrderCaptchaExpired = function () {
+    const button = document.querySelector('#order-form button[type="submit"]');
+    if (button) button.disabled = true;
+  };
+
+  function openReproductionDetail(title, image) {
+    const modal = document.querySelector('[data-repro-modal]');
+    if (!modal) return;
+    const titleEl = modal.querySelector('[data-repro-modal-title]');
+    if (titleEl) titleEl.textContent = title;
+    const img = modal.querySelector('[data-repro-modal-image]');
+    if (img) {
+      img.setAttribute("src", image || "");
+      img.setAttribute("alt", `Reproduction — ${title}`);
+    }
+    const orderBtn = modal.querySelector('[data-repro-modal-order]');
+    if (orderBtn) orderBtn.setAttribute("data-repro-modal-order-title", title);
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeReproDetailModal() {
+    const modal = document.querySelector('[data-repro-modal]');
+    if (!modal) return;
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  // Mécanisme identique pour chaque carte reproduction : le titre et
+  // l'image sont lus directement sur la carte cliquée (h3 / img), pas
+  // besoin de dupliquer ces informations en attributs data-*.
+  function initReproDetailModal() {
+    const modal = document.querySelector('[data-repro-modal]');
+    if (!modal) return;
+
+    document.addEventListener("click", (event) => {
+      const trigger = event.target.closest("[data-repro-detail]");
+      if (!trigger) return;
+      const card = trigger.closest(".shop-card");
+      const title = card?.querySelector("h3")?.textContent.trim();
+      const image = card?.querySelector("img")?.getAttribute("src");
+      if (title) openReproductionDetail(title, image);
+    });
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal || event.target.closest("[data-repro-modal-close]")) closeReproDetailModal();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (!modal.classList.contains("is-open")) return;
+      if (event.key === "Escape") closeReproDetailModal();
+      trapFocus(modal, event);
+    });
+
+    modal.querySelector('[data-repro-modal-order]')?.addEventListener("click", (event) => {
+      const title = event.currentTarget.getAttribute("data-repro-modal-order-title");
+      closeReproDetailModal();
+      if (title) openReproductionOrder(title);
     });
   }
 
@@ -883,6 +1000,7 @@
     initShop();
     initContactForm();
     initOrderModal();
+    initReproDetailModal();
   }
 
   if (document.readyState === "loading") {

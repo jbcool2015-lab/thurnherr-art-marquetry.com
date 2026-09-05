@@ -14,7 +14,11 @@
   --shop-gold-light: #ddc99a;
 }
 
-#boutique-section {
+/* #reproductions-section reprend exactement la même règle que
+   #boutique-section (padding, centrage, couleurs) : même hero que les
+   autres sections du site (Catalogue, Expositions, Contact). */
+#boutique-section,
+#reproductions-section {
   background: #0a0a0a;
   color: var(--shop-ivory);
   font-family: Alata, "Helvetica Neue", Arial, sans-serif;
@@ -22,7 +26,8 @@
   text-align: center;
 }
 
-#boutique-section * {
+#boutique-section *,
+#reproductions-section * {
   box-sizing: border-box;
 }
 
@@ -403,6 +408,75 @@
   cursor: not-allowed;
   opacity: 0.35;
   transform: none;
+}
+
+/* ══════════════════════════════════════
+   REPRODUCTIONS — cartes claires, esprit galerie
+   (le catalogue principal #boutique-section garde le fond sombre)
+   ══════════════════════════════════════ */
+#reproductions-section .shop-card {
+  background: #f7f4ef;
+  border-color: #e8e2d9;
+  box-shadow: 0 0.5rem 1.5rem rgba(26, 20, 16, 0.12);
+}
+
+#reproductions-section .shop-card:hover {
+  border-color: #e8e2d9;
+  box-shadow: 0 1.3rem 3rem rgba(26, 20, 16, 0.22);
+}
+
+#reproductions-section .shop-card.repro-featured {
+  border-color: rgba(201, 169, 110, 0.5);
+}
+
+#reproductions-section .shop-media {
+  background: #f0ede8;
+}
+
+#reproductions-section .shop-media::after {
+  content: none;
+}
+
+#reproductions-section .shop-card img {
+  filter: drop-shadow(0 0.75rem 1.5rem rgba(26, 20, 16, 0.16));
+}
+
+#reproductions-section .shop-card:hover img {
+  filter: drop-shadow(0 1rem 2rem rgba(26, 20, 16, 0.22));
+  transform: scale(1.02);
+}
+
+#reproductions-section .shop-card h3 {
+  color: #1a1410;
+}
+
+#reproductions-section .shop-price {
+  color: #c9a96e;
+  font-size: 0.95rem;
+}
+
+#reproductions-section .shop-button {
+  background: #c9a96e;
+  border-color: #c9a96e;
+  color: #1a1410;
+}
+
+#reproductions-section .shop-button:hover {
+  background: #b8935a;
+  border-color: #b8935a;
+  color: #1a1410;
+}
+
+#reproductions-section .shop-button.secondary {
+  background: transparent;
+  border-color: rgba(26, 20, 16, 0.3);
+  color: #1a1410;
+}
+
+#reproductions-section .shop-button.secondary:hover {
+  background: rgba(201, 169, 110, 0.14);
+  border-color: #c9a96e;
+  color: #1a1410;
 }
 
 /* ══════════════════════════════════════
